@@ -1,0 +1,105 @@
+
+
+
+.personBadge {
+  position: relative;
+  display: flex;
+  width: auto;
+  height: 20px;
+
+  background: #aaa;
+  padding: 10px 15px;
+  padding-right: 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+  .personBadge.active {
+    background: rgb(140, 153, 247);
+  }
+
+  .personBadge .text {
+    margin-right: 10px;
+    float: left;
+    color: #fff;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .personBadge .iconHolder {
+    display: flex;
+  }
+    .personBadge .icon {
+      position: relative;
+      height: 16px;
+      margin: 2px 2px;
+      width: auto;
+      opacity: .3;
+    }
+
+    .personBadge .icon.active {
+      opacity: 1;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.text {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	color: #777;
+	font-size: 20px;
+}
+.text.subText {
+  font-size: 12px;;
+}
+
+
+
+
+.button {
+	position: relative;
+	width: auto;
+	padding: 7px 15px !important;
+
+	border-radius: 30px;
+	font-size: 13px;
+
+	overflow: hidden;
+	cursor: pointer;
+}
+	.button.bBoxy {
+		border-radius: 4px;	
+	}
+
+	.button.bDefault {
+		/*background: #7592BF !important;*/
+		background: rgb(140, 153, 247);
+		color: #fff !important;
+	}
+
+	.button.bWarn {
+		background: #ff632c !important;
+		color: #fff !important;
+	}
+
+	.button img {
+		position: relative;
+		top: 3px;
+		margin-left: -5px;
+		margin-right: 3px;
+
+		width: 16px;
+		height: auto;
+	}
+
+
+

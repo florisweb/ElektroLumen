@@ -1,0 +1,20 @@
+.App {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template-areas: 'sideBar mainContent';
+    grid-template-columns: 300px auto;
+}
+
+
+#sideBar {
+    grid-area: sideBar;
+    width: calc(100% - 20px * 2);
+    padding: 20px;
+
+    background: linear-gradient(to bottom right, rgba(0, 255, 0, .3), rgba(0, 200, 255, .4));
+}
