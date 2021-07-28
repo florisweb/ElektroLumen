@@ -27,7 +27,7 @@
         $_token
       ]);
       if (sizeof($response) != 1) return "E_deviceNotFound";
-      return (int)$result[0]['id'];
+      return (int)$response[0]['id'];
     }
 
     public function getUserId() {
@@ -39,12 +39,12 @@
 
     public function registerDevice($_data) {
       $token    = $this->createId();
-      $result   = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name) VALUES (?, ?)", array(
+      $response   = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name) VALUES (?, ?)", array(
         $token,
         (string)$_data['name']
       ));
 
-      if (!$result || is_string($result)) return false;
+      if (!$response || is_string($response)) return "E_Internal";
       return $token;
     }
 
@@ -73,7 +73,7 @@
         $this->id
       ]);
       if (sizeof($response) != 1) return false;
-      return $result[0]['ownerId'];
+      return $response[0]['ownerId'];
     }
 
     public function bind() {
