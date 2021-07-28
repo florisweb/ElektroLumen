@@ -1,117 +1,67 @@
-
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
-#include <DHT_U.h>
-
-
-const int DHT11SensorPin = 7;
-const int motorEnablePin = 2;
-const int groundMoisturePin1 = A0;
-
-
-DHT_Unified dht(DHT11SensorPin, DHT11);
+#include <WiFi.h>
+#include <HTTPClient.h>
 
 
 
-// dry: 0
-// water: 690
+String requestPath = "http://192.168.178.92:8080/testAPI";
+unsigned long lastTime = 0;
+// Timer set to 10 minutes (600000)
+//unsigned long timerDelay = 600000;
+// Set timer to 5 seconds (5000)
+unsigned long timerDelay = 10000;
 
-uint32_t delayMS;
 
-void setup()
-{
-  Serial.begin(115200);
-
-  Serial.println("Booting Device...");
-  pinMode(motorEnablePin, OUTPUT);
-  digitalWrite(motorEnablePin, LOW);
-  pinMode(groundMoisturePin1, INPUT);
-
-  // Initialize device.
-  dht.begin();
-
-  // Print temperature sensor details.
-  sensor_t sensor;
-  dht.temperature().getSensor(&sensor);
-  Serial.println(F("------------------------------------"));
-  Serial.println(F("Temperature Sensor"));
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("°C"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("°C"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("°C"));
-  Serial.println(F("------------------------------------"));
-  // Print humidity sensor details.
-  dht.humidity().getSensor(&sensor);
-  Serial.println(F("Humidity Sensor"));
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("%"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("%"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
-  Serial.println(F("------------------------------------"));
-  // Set delay between sensor readings based on sensor details.
-  delayMS = sensor.min_delay / 1000;
-
+void setup() {
+  Serial.begin(115200);         // Start the Serial communication to send messages to the computer
+  delay(10);
+  Serial.println('\n');
   
-  //  Serial.println("Boot Completed.");
-  //  delay(5000);
-  //  digitalWrite(motorEnablePin, HIGH);
-  //  delay(1000);
-  //  digitalWrite(motorEnablePin, LOW);
-  //  delay(5000);
-  //
-  //  digitalWrite(motorEnablePin, HIGH);
-  //  delay(1000);
-  //  digitalWrite(motorEnablePin, LOW);
+  WiFi.begin(ssid, password);             // Connect to the network
+  Serial.print("Connecting to ");
+  Serial.print(ssid);
+
+  while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
+    delay(500);
+    Serial.print('.');
+  }
+
+  Serial.println('\n');
+  Serial.println("Connection established!");  
+  Serial.print("IP address:\t");
+  Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
 }
-//
-//void loop()
-//{
-//  delay(100);
-//  // Groundmoisture
-//  //  float value = analogRead(groundMoisturePin1) / 6.9;
-//
-//  // Water height - not reliable
-//  //  float value = analogRead(groundMoisturePin1) / 6.2;
-//  //  Serial.println(value);
-//
-//  //  sensorController.update();
-//  //  wifiController.update();
-//  //  ESCControl.update();
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void loop() {
-  // Delay between measurements.
-  delay(delayMS);
-  // Get temperature event and print its value.
-  sensors_event_t event;
-  dht.temperature().getEvent(&event);
-  if (isnan(event.temperature)) {
-    Serial.println(F("Error reading temperature!"));
-  }
-  else {
-    Serial.print(F("Temperature: "));
-    Serial.print(event.temperature);
-    Serial.println(F("°C"));
-  }
-  // Get humidity event and print its value.
-  dht.humidity().getEvent(&event);
-  if (isnan(event.relative_humidity)) {
-    Serial.println(F("Error reading humidity!"));
-  }
-  else {
-    Serial.print(F("Humidity: "));
-    Serial.print(event.relative_humidity);
-    Serial.println(F("%"));
+  //Send an HTTP POST request every 10 minutes
+  if ((millis() - lastTime) > timerDelay) {
+    //Check WiFi connection status
+    if(WiFi.status() == WL_CONNECTED){
+      HTTPClient http;
+
+      String serverPath = requestPath + "?temperature=24.37";
+      
+      // Your Domain name with URL path or IP address with path
+      http.begin(serverPath.c_str());
+      
+      // Send HTTP GET request
+      int httpResponseCode = http.GET();
+      
+      if (httpResponseCode>0) {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+      else {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
+      // Free resources
+      http.end();
+    }
+    else {
+      Serial.println("WiFi Disconnected");
+    }
+    lastTime = millis();
   }
 }
