@@ -88,11 +88,17 @@
     }
 
 
-    public function addData($_data) {
+    public function addDataRow($_data) {
+      return $this->DB->execute("INSERT INTO $DBDataTableName (deviceId, data) VALUES (?, ?)", [
+        $this->id,
+        json_encode($_data)
+      ]);
     }
 
     public function getAllData() {
-
+      return $this->DB->execute("SELECT data, createDate FROM $DBDataTableName WHERE id=?", [
+        $this->id
+      ]);
     }
 
     public function remove() {
