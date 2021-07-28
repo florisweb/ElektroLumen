@@ -5,7 +5,7 @@
 
 void WifiController::configure(const char* _ssid, const char* _password)
 {
-  Serial.begin(115200);         // Start the Serial communication to send messages to the computer
+  Serial.begin(115200);
   delay(10);
   Serial.println('\n');
   

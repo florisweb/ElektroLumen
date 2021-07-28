@@ -1,5 +1,6 @@
 #ifndef WifiController_h
 #define WifiController_h
+#include <WString.h>
 
 class WifiController
 {
