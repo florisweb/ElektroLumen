@@ -8,11 +8,14 @@ void WifiController::configure(const char* _ssid, const char* _password)
   Serial.begin(115200);
   delay(10);
   Serial.println('\n');
-  
-  WiFi.begin(_ssid, _password);             // Connect to the network
+
+  WiFi.begin(_ssid, _password);
   Serial.print("Connecting to ");
   Serial.print(_ssid);
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  
   while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
     delay(500);
     Serial.print('.');
@@ -21,14 +24,15 @@ void WifiController::configure(const char* _ssid, const char* _password)
   Serial.println('\n');
   Serial.println("Connection established!");
   Serial.print("IP address:\t");
-  Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
-
+  Serial.println(WiFi.localIP());
 }
 
 String WifiController::sendGet(String _path, String _data)
-{  
-  if (WiFi.status() == WL_CONNECTED) 
+{
+  digitalWrite(LED_BUILTIN, HIGH);
+  if (WiFi.status() == WL_CONNECTED)
   {
+    digitalWrite(LED_BUILTIN, LOW); // Indicates that the device is connected to WiFi
     HTTPClient http;
 
     String path = _path + '?' + _data;
@@ -51,5 +55,5 @@ String WifiController::sendGet(String _path, String _data)
     return String(httpResponseCode);
   } else {
     Serial.println("WiFi Disconnected");
-  }  
+  }
 }
