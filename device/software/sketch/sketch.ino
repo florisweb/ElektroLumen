@@ -1,6 +1,7 @@
 
 #include "Device.h";
 
+
 const String deviceName = "ElektroLumen";
 
 Device device;
@@ -19,5 +20,8 @@ void setup() {
  }
 
 void loop() {
-
+  bool Status = device.getStatus();
+  Serial.print("Status: ");
+  Serial.println(Status);
+  delay(5000);
 }
