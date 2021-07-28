@@ -9,11 +9,14 @@ class Device
     bool registerDevice(String _name);
 
     bool getStatus();
+    String writeData(String _data);
+    void setToken(String _token);
     
     String token;
     bool isBound = false;
   private:
     String deviceName;
+    bool isDeviceRegistered();
 };
 
 #endif
