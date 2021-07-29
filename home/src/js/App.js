@@ -1,6 +1,6 @@
 
 import SideBar from './sideBar';
-import MainContent from './mainContent';
+import MainContent from './mainContent/mainContent';
 import '../css/component.css';
 import '../css/App.css';
 
