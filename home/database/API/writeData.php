@@ -1,5 +1,5 @@
 <?php
-	require_once __DIR__ . '/../modules/databaseHelper.php';
+	require_once __DIR__ . '/../modules/deviceManager.php';
 	
 	$_token = (string)$_GET['token'];
 	$_data = json_decode($_GET['data'], true);

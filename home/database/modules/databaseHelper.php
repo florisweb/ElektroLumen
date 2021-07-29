@@ -89,14 +89,14 @@
 
 
     public function addDataRow($_data) {
-      return $this->DB->execute("INSERT INTO $DBDataTableName (deviceId, data) VALUES (?, ?)", [
+      return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, data) VALUES (?, ?)", [
         $this->id,
         json_encode($_data)
       ]);
     }
 
     public function getAllData() {
-      return $this->DB->execute("SELECT data, createDate FROM $DBDataTableName WHERE id=?", [
+      return $this->DB->execute("SELECT data, createDate FROM $this->DBDataTableName WHERE id=?", [
         $this->id
       ]);
     }
