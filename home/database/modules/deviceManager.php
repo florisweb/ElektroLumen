@@ -50,6 +50,13 @@
       return $this->DBHelper->bind();
     }
 
+    public function addDataRow($_data) {
+      $data = [];
+      for ($i = 0; $i < sizeof($_data); $i++) $data[$i] = (float)$_data[$i];
+
+      return $this->DBHelper->addDataRow($_data);
+    }
+
   
     public function remove() {
      // auth checks

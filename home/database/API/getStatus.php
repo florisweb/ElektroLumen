@@ -7,16 +7,9 @@
 	
 	if (!$device || is_string($device)) 
 	{
-		$response = array(
-			"error" => $device,
-			"result" => false,
-		);
+		echo $device;
 	} else {
-		$response = array(
-			"error" => false,
-			"result" => $device->getStatus(),
-		);
+		$status = $device->getStatus();
+		echo $status["isBound"] ? 'true' : 'false';
 	}
-
-	echo json_encode($response);
 ?>
