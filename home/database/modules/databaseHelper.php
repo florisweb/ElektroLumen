@@ -30,6 +30,18 @@
       return (int)$response[0]['id'];
     }
 
+    public function getDevicesIdsByOwnerId($_ownerId) {
+      $response = $this->DB->execute("SELECT id FROM $this->DeviceListTableName WHERE ownerId=?", [
+        $_ownerId
+      ]);
+      return array_map('getIdFromObject', $response);
+    }
+
+    public function getAllUnboundDevicesIds() {
+      $response = $this->DB->execute("SELECT id FROM $this->DeviceListTableName WHERE ownerId IS NULL", []);
+      return array_map('getIdFromObject', $response);
+    }
+
     public function getUserId() {
       $userId = $GLOBALS["SESSION"]->get("userId");
       if (!$userId) return false;
@@ -76,6 +88,17 @@
       return $response[0]['ownerId'];
     }
 
+
+    public function getMetaData() {
+      $response = $this->DB->execute("SELECT id, name, registerTime FROM $this->DBTableName WHERE id=? LIMIT 1", [
+        $this->id
+      ]);
+      if (sizeof($response) != 1) return false;
+      return $response[0];
+    }
+
+    
+
     public function bind() {
       if ($this->getOwnerId()) return "E_deviceAlreadyBound";
       $userId = $GLOBALS['DBHelper']->getUserId();
@@ -109,4 +132,10 @@
     }
   }
 
+
+
+
+  function getIdFromObject($_object) {
+    return $_object['id'];
+  }
 ?>

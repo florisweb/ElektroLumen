@@ -21,6 +21,26 @@
       if (is_string($id)) return $id;
       return $this->getDeviceById($id);
     }
+
+    public function getDevicesByOwnerId($_ownerId) {
+      $ids = $GLOBALS['DBHelper']->getDevicesIdsByOwnerId($_ownerId);
+      $devices = [];
+      foreach ($ids as $id) 
+      {
+        array_push($devices, $this->getDeviceById($id));
+      }
+      return $devices;
+    }
+
+    public function getUnBoundDevices() {
+      $ids = $GLOBALS['DBHelper']->getAllUnboundDevicesIds();
+      $devices = [];
+      foreach ($ids as $id) 
+      {
+        array_push($devices, $this->getDeviceById($id));
+      }
+      return $devices;
+    }
   }
 
 
@@ -33,11 +53,15 @@
 
     public function __construct($_id) {
       $this->DBHelper = $GLOBALS['DBHelper']->getDeviceDBInstance($_id);
-      $this->id   = (int)$_id;
+      $this->id       = (int)$_id;
     }
 
     public function getOwnerId() {
       return $this->DBHelper->getOwnerId();
+    }
+
+    public function getMetaData() {
+      return $this->DBHelper->getMetaData();
     }
 
     public function getStatus() {
