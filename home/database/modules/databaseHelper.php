@@ -1,6 +1,7 @@
 <?php
   require_once __DIR__ . "/../getRoot.php";
   include_once($GLOBALS["Root"] . "/PHP/PacketManager.php");
+  require_once __DIR__ . "/miscilanious.php";
 
   $GLOBALS["PM"]->includePacket("DB", "1.0");
   $GLOBALS["PM"]->includePacket("SESSION", "1.0");
@@ -51,9 +52,10 @@
 
     public function registerDevice($_data) {
       $token    = $this->createId();
-      $response   = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name) VALUES (?, ?)", array(
+      $response = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name, ip) VALUES (?, ?, ?)", array(
         $token,
-        (string)$_data['name']
+        (string)$_data['name'],
+        getIP()
       ));
 
       if (!$response || is_string($response)) return "E_Internal";
@@ -69,8 +71,8 @@
 
 
   class _databaseHelper_DBDeviceInstance {
-    private $DBTableName = "deviceList";
-    private $DBDataTableName = 'deviceData';
+    private $DBTableName      = "deviceList";
+    private $DBDataTableName  = 'deviceData';
 
     private $DB;
     public $id;
@@ -96,6 +98,16 @@
       if (sizeof($response) != 1) return false;
       return $response[0];
     }
+
+    public function isOnSameNetwork() {
+      $response = $this->DB->execute("SELECT ip FROM $this->DBTableName WHERE id=? LIMIT 1", [
+        $this->id
+      ]);
+      if (sizeof($response) != 1) return false;
+      return $response[0]['ip'] === getIP();
+    }
+
+    
 
     
 
@@ -130,12 +142,5 @@
         array($this->id)
       );
     }
-  }
-
-
-
-
-  function getIdFromObject($_object) {
-    return $_object['id'];
   }
 ?>

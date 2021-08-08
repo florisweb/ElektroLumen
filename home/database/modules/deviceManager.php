@@ -59,6 +59,9 @@
     public function getOwnerId() {
       return $this->DBHelper->getOwnerId();
     }
+    public function isOnSameNetwork() {
+      return $this->DBHelper->isOnSameNetwork();
+    }
 
     public function getMetaData() {
       return $this->DBHelper->getMetaData();
