@@ -13,7 +13,9 @@
     }
 
     public function getDeviceById($_id) {
-      return new _Device($_id);
+      $device = new _Device($_id);
+      if ($device->errorOnCreation) return $device->errorOnCreation;
+      return $device;
     }
 
     public function getDeviceByToken($_token) {
@@ -51,27 +53,36 @@
     private $DBHelper;
     public $id;
 
+    public $errorOnCreation = false;
+
     public function __construct($_id) {
-      $this->DBHelper = $GLOBALS['DBHelper']->getDeviceDBInstance($_id);
       $this->id       = (int)$_id;
+      $this->DBHelper = $GLOBALS['DBHelper']->getDeviceDBInstance($this->id);
+      if (is_string($this->DBHelper)) $this->errorOnCreation = $this->DBHelper;
     }
 
     public function getOwnerId() {
-      return $this->DBHelper->getOwnerId();
+      return $this->DBHelper->ownerId;
     }
     public function isOnSameNetwork() {
-      return $this->DBHelper->isOnSameNetwork();
+      return $this->DBHelper->ip === getIP();
     }
 
     public function getMetaData() {
-      return $this->DBHelper->getMetaData();
+      return array(
+        "id"            => $this->id,
+        "name"          => $this->DBHelper->name,
+        "registerTime"  => $this->DBHelper->registerTime
+      );
     }
 
     public function getStatus() {
       return array(
-        "isBound" => !!$this->DBHelper->getOwnerId()
+        "isBound" => !!$this->DBHelper->ownerId
       );
     }
+
+
 
     public function bind() {
       return $this->DBHelper->bind();

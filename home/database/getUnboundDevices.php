@@ -3,11 +3,12 @@
 
   $devices = $DeviceManager->getUnBoundDevices();
 
-
   $output = [];
   foreach ($devices as $device)
   {
-    array_push($output, $device->getMetaData());
+    $newDevice = $device->getMetaData();
+    $newDevice['onSameNetwork'] = $device->isOnSameNetwork();
+    array_push($output, $newDevice);
   }
 
   echo json_encode($output);  

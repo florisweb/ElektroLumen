@@ -20,7 +20,9 @@
     }
 
     public function getDeviceDBInstance($_deviceId) {
-      return new _databaseHelper_DBDeviceInstance($this->DB, $_deviceId);
+      $device = new _databaseHelper_DBDeviceInstance($this->DB, $_deviceId);
+      if ($device->errorOnCreation) return $device->errorOnCreation;
+      return $device;
     }
 
     public function getDeviceIdByToken($_token) {
@@ -75,47 +77,48 @@
     private $DBDataTableName  = 'deviceData';
 
     private $DB;
+    
     public $id;
+    public $name;
+    public $ownerId;
+    public $ip;
+
+    public $errorOnCreation = false;
 
     public function __construct($_DB, $_id) {
       $this->DB   = $_DB;
       $this->id   = (int)$_id;
+
+
+      $response = $this->DB->execute("SELECT name, ownerId, registerTime, ip FROM $this->DBTableName WHERE id=? LIMIT 1", [
+        $this->id
+      ]);
+      if (sizeof($response) != 1) return $this->errorOnCreation = 'E_deviceNotFound';
+      
+      $this->name         = $response[0]['name'];
+      $this->ownerId      = $response[0]['ownerId'];
+      $this->registerTime = $response[0]['registerTime'];
+      $this->ip           = $response[0]['ip'];
     }
 
     public function getOwnerId() {
       $response = $this->DB->execute("SELECT ownerId FROM $this->DBTableName WHERE id=? LIMIT 1", [
         $this->id
       ]);
-      if (sizeof($response) != 1) return false;
       return $response[0]['ownerId'];
     }
 
-
-    public function getMetaData() {
-      $response = $this->DB->execute("SELECT id, name, registerTime FROM $this->DBTableName WHERE id=? LIMIT 1", [
-        $this->id
-      ]);
-      if (sizeof($response) != 1) return false;
-      return $response[0];
-    }
-
-    public function isOnSameNetwork() {
-      $response = $this->DB->execute("SELECT ip FROM $this->DBTableName WHERE id=? LIMIT 1", [
-        $this->id
-      ]);
-      if (sizeof($response) != 1) return false;
-      return $response[0]['ip'] === getIP();
-    }
 
     
 
     
 
     public function bind() {
-      if ($this->getOwnerId()) return "E_deviceAlreadyBound";
+      if ($this->ownerId) return "E_deviceAlreadyBound";
       $userId = $GLOBALS['DBHelper']->getUserId();
       if (!$userId) return "E_noAuth";
 
+      $this->ownerId = $userId;
       return $this->DB->execute("UPDATE $this->DBTableName SET ownerId=? WHERE id=?", [
         $userId,
         $this->id
