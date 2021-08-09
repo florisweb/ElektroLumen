@@ -1,6 +1,11 @@
 
 
 const Server = new function() {
+  this.getUnboundDevices = async function() {
+    return await this.fetchData('database/getUnboundDevices.php');
+  }
+
+
   this.fetchData = async function(_url, _parameters = "", _attempts = 0) {
     let parameters = _parameters;
     let response = await new Promise(function (resolve) {

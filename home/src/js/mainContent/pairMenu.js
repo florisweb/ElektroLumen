@@ -36,11 +36,11 @@ function PairMenuElement() {
 }
 
 function DeviceElement({data}) {
-  console.log(data);
-
+  console.log(data, arguments);
 
   return <div className='deviceOption'>
-    data.name
+    {data.name}
+    {data.onSameNetwork ? <div className='onSameNetworkIndicator'>Local</div> : ''}
   </div>
 }
 
