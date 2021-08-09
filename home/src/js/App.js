@@ -5,7 +5,7 @@ import '../css/component.css';
 import '../css/App.css';
 
 
-
+window.MainContent = MainContent;
 const App = new function() {
 
 

@@ -6,7 +6,7 @@ function Page() {
   // {'page ' + openState ? '' : 'hide'}>
 
   return (
-    <div className={'page' + (openState ? '' : ' hide')} open={() => {setState(true)}} close={() => {setState(false)}}> 
+    <div className={'page' + (openState ? '' : ' hide')}> 
       hey there
       {/* <Header/> */}
       {/* <Content/> */}

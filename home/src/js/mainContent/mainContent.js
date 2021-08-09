@@ -1,14 +1,18 @@
 import '../../css/mainContent/mainContent.css';
-// import PairPage from './pairPage';
+import PairMenu from './pairMenu';
 import Page from './page';
 
 const MainContent = new function() {
-  // this.pairPage = PairPage;
+  this.pairMenu = PairMenu;
 
   this.render = function() {
     return (
       <div id='mainContent'>
         <Page/>
+
+        <Page>
+        </Page>
+        <PairMenu.render/>
       </div>
     );
   }
