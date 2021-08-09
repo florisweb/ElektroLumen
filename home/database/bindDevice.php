@@ -6,6 +6,7 @@
     "error" => "E_invalidData",
     "result" => false,
   )));
+
   $device = $DeviceManager->getDeviceById($_id);  
   if (!$device || is_string($device)) die(
     json_encode(array(
@@ -13,8 +14,6 @@
       "result" => false,
     ))
   );
-    echo '<pre>';
-  var_dump($device);
 
   if ($device->getStatus()['isBound'] === true) die(
     json_encode(array(
