@@ -1,0 +1,19 @@
+
+
+.popup.pairMenu {
+    padding: 20px;
+    box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .1);
+
+    transition: all .3s;
+}
+
+.popup.pairMenu.hide {
+    opacity: 0;
+    transform: scale(.7);
+    pointer-events: none;
+}
+
+.popup.pairMenu.binding {
+    pointer-events: none;
+    background-color: red;
+}

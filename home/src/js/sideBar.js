@@ -3,6 +3,9 @@ import '../css/sidebar.css';
 import React from 'react';
 import Server from './server';
 import icon from '../images/sidebar.jpg';
+import addDeviceIcon from '../images/sidebar.jpg';
+
+import MainContent from './mainContent/mainContent';
 
 
 const SideBar = new function() {
@@ -10,6 +13,7 @@ const SideBar = new function() {
     return (
       <div id='sideBar'>
         <DeviceListElement/>
+        <AddDeviceButton/>
       </div>
     );
   }
@@ -57,6 +61,14 @@ function DeviceElement({data}) {
   </div>
 }
 
+
+
+function AddDeviceButton() {
+  return <div className='header addDeviceButton' onClick={() => {MainContent.pairMenu.open()}}>
+    <img className='icon' src={addDeviceIcon}/>
+    <div className='text title'>{'Add Device'}</div>
+  </div>
+}
 
 
 

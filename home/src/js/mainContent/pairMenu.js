@@ -1,12 +1,24 @@
+import '../../css/mainContent/pairMenu.css';
+
 import React from 'react';
 import Server from '../server';
+import SideBar from '../sideBar';
 
 
 let renderDeviceElements;
 let setBindState;
+let setOpenState;
 const PairMenu = new function() {
   this.render = function() {
     return <PairMenuElement/>
+  }
+
+  this.open = async function() {
+    await this.update();
+    setOpenState(true);
+  }
+  this.close = function() {
+    setOpenState(false);
   }
 
 
@@ -20,20 +32,15 @@ const PairMenu = new function() {
 
 function PairMenuElement() {
   let binding = false;
+  let openState = false;
   [binding, setBindState] = React.useState(false);
+  [openState, setOpenState] = React.useState(false);
 
-  let [openState, setOpenState] = React.useState(true);
   let deviceElements;
   [deviceElements, renderDeviceElements] = React.useState('Searching for devices...');
-  PairMenu.open = function() {
-    setOpenState(true);
-  }
-  PairMenu.close = function() {
-    setOpenState(false);
-  }
-  // onClick={() => {setState(false)}}
+
   return (
-    <div className={'popup' + (openState ? '' : ' hide') + (binding ? ' binding' : '')}> 
+    <div className={'popup pairMenu' + (openState ? '' : ' hide') + (binding ? ' binding' : '')}> 
       {deviceElements}
     </div>
   );
@@ -45,10 +52,14 @@ function DeviceElement({data}) {
   return <div className='deviceOption' onClick={() => {
     console.log('bind', data.id);
     setBindState(true);
-    Server.bindDevice(data.id).then(function(_response) {
+    Server.bindDevice(data.id).then(async function(_response) {
       console.log('pair response', _response);
       setBindState(false);
-      if (_response.result) PairMenu.close();
+
+      if (!_response.result) return;
+      PairMenu.close();
+    
+      await SideBar.deviceList.update();
     });
   }}>
     {data.name}
