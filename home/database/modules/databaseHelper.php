@@ -152,7 +152,7 @@
     }
 
 
-    private function updateUpdateTime() {
+    public function updateUpdateTime() {
       return $this->DB->execute("UPDATE $this->DBTableName SET lastUpdateTime=? WHERE id=?", [
         time(),
         $this->id

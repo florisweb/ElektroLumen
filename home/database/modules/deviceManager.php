@@ -87,7 +87,9 @@
       );
     }
 
-
+    public function updateUpdateTime() {
+      return $this->DBHelper->updateUpdateTime();
+    }
 
     public function bind() {
       return $this->DBHelper->bind();

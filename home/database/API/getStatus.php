@@ -9,6 +9,7 @@
 	{
 		echo $device;
 	} else {
+		$device->updateUpdateTime();
 		$status = $device->getStatus();
 		echo $status["isBound"] ? 'true' : 'false';
 	}
