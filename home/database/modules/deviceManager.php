@@ -68,6 +68,11 @@
       return $this->DBHelper->ip === getIP();
     }
 
+    public function getConnectionStatus() {
+      $dt = time() - $this->DBHelper->lastUpdateTime;
+      return $dt < 5 * 60; // s = deviceConnectionTimeout
+    }
+
     public function getMetaData() {
       return array(
         "id"            => $this->id,

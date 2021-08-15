@@ -54,10 +54,11 @@
 
     public function registerDevice($_data) {
       $token    = $this->createId();
-      $response = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name, ip) VALUES (?, ?, ?)", array(
+      $response = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name, ip, lastUpdateTime) VALUES (?, ?, ?, ?)", array(
         $token,
         (string)$_data['name'],
-        getIP()
+        getIP(),
+        time()
       ));
 
       if (!$response || is_string($response)) return "E_Internal";
@@ -81,6 +82,8 @@
     public $id;
     public $name;
     public $ownerId;
+    public $registerTime;
+    public $lastUpdateTime;
     public $ip;
 
     public $errorOnCreation = false;
@@ -90,15 +93,16 @@
       $this->id   = (int)$_id;
 
 
-      $response = $this->DB->execute("SELECT name, ownerId, registerTime, ip FROM $this->DBTableName WHERE id=? LIMIT 1", [
+      $response = $this->DB->execute("SELECT name, ownerId, registerTime, lastUpdateTime, ip FROM $this->DBTableName WHERE id=? LIMIT 1", [
         $this->id
       ]);
       if (sizeof($response) != 1) return $this->errorOnCreation = 'E_deviceNotFound';
       
-      $this->name         = $response[0]['name'];
-      $this->ownerId      = $response[0]['ownerId'];
-      $this->registerTime = $response[0]['registerTime'];
-      $this->ip           = $response[0]['ip'];
+      $this->name           = $response[0]['name'];
+      $this->ownerId        = $response[0]['ownerId'];
+      $this->registerTime   = $response[0]['registerTime'];
+      $this->lastUpdateTime = $response[0]['lastUpdateTime'];
+      $this->ip             = $response[0]['ip'];
     }
 
     public function getOwnerId() {
@@ -127,6 +131,7 @@
 
 
     public function addDataRow($_data) {
+      $this->updateUpdateTime();
       return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, data) VALUES (?, ?)", [
         $this->id,
         json_encode($_data)
@@ -144,6 +149,14 @@
         "DELETE FROM $this->DBTableName WHERE id=? LIMIT 1", 
         array($this->id)
       );
+    }
+
+
+    private function updateUpdateTime() {
+      return $this->DB->execute("UPDATE $this->DBTableName SET lastUpdateTime=? WHERE id=?", [
+        time(),
+        $this->id
+      ]);
     }
   }
 ?>

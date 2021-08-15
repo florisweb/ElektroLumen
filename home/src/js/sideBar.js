@@ -2,7 +2,7 @@ import '../css/sidebar.css';
 
 import React from 'react';
 import Server from './server';
-import icon from '../images/sidebar.jpg';
+import icon from '../images/icons/plantIcon.png';
 import addDeviceIcon from '../images/sidebar.jpg';
 
 import MainContent from './mainContent/mainContent';
@@ -54,10 +54,14 @@ function DeviceListElement() {
 }
 
 function DeviceElement({data}) {
+  let statusClass = 'offline';
+  if (data.status == 1) statusClass = 'online';
+  if (data.status == 2) statusClass = 'error';
+
   return <div className='header device'>
     <img className='icon' src={icon}/>
     <div className='text title'>{data.name}</div>
-    <div className='text status'>{data.onSameNetwork ? 'local' : 'external'}</div>
+    <div className={'text status ' + statusClass}>●</div>
   </div>
 }
 

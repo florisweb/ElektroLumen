@@ -8,6 +8,7 @@
   {
     $newDevice = $device->getMetaData();
     $newDevice['onSameNetwork'] = $device->isOnSameNetwork();
+    $newDevice['status']        = $device->getConnectionStatus();
     array_push($output, $newDevice);
   }
 
