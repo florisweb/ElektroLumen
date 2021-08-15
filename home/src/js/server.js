@@ -1,10 +1,17 @@
 
 
 const Server = new function() {
+  this.getDevices = async function() {
+    return await this.fetchData('database/getDeviceList.php');
+  }
+
   this.getUnboundDevices = async function() {
     return await this.fetchData('database/getUnboundDevices.php');
   }
 
+  this.bindDevice = async function(_id) {
+    return await this.fetchData('database/bindDevice.php', "id=" + _id);
+  }
 
   this.fetchData = async function(_url, _parameters = "", _attempts = 0) {
     let parameters = _parameters;

@@ -7,8 +7,6 @@ import '../css/App.css';
 
 window.MainContent = MainContent;
 const App = new function() {
-
-
   this.render = function() {
     return (
       <div className='App'>
@@ -17,6 +15,11 @@ const App = new function() {
       </div>
     );
   }
+
+  this.setup = async function() {
+    await SideBar.update();
+  }
 }
 
+App.setup();
 export default App;
