@@ -10,18 +10,65 @@ import {Page, PageHeader} from './page.js';
 window.graph = {};
 
 function DevicePage({device}) {
+  device.UIDefinition = [
+    {
+      type: 'Variable',
+      parameters: [
+        'Moisture',
+        '50%'
+      ]
+    },
+    {
+      type: 'Variable',
+      parameters: [
+        'Humidity',
+        '72%'
+      ]
+    },
+    {
+      type: 'Variable',
+      parameters: [
+        'Temperature',
+        '21.0*'
+      ]
+    },
+    {
+      type: 'Variable',
+      parameters: [
+        'Light Intensity',
+        '25 Lux'
+      ]
+    }
+  ];
+
+  let UI = UIDefListToObjects(device.UIDefinition);
   return (
     <Page controlObject={MainContent.devicePage}>
       <PageHeader title={device.name}/>
-      <LineGraph controlObject={window.graph} xAxisTag='Time (h)' yAxisTag='Moisture (%)'/>
+      {UI}
 
-      <Variable name='Moisture' value='50%'/>
-      <Variable name='Humidity' value='72%'/>
-      <Variable name='Temperature' value='21.0*'/>
-      <Variable name='Light Intensity' value='25'/>
+      <LineGraph controlObject={window.graph} xAxisTag='Time (h)' yAxisTag='Moisture (%)'/>
     </Page>
   );
 }
+
+
+
+
+function UIDefListToObjects(_UIDefList = []) {
+  let UI = [];
+  for (let item of _UIDefList) UI.push(UIDefToObjects(item));
+  return UI;
+}
+
+function UIDefToObjects(_Def) {
+  switch (_Def.type) 
+  {
+    case 'Variable': return <Variable name={_Def.parameters[0]} value={_Def.parameters[1]}/>;
+    default: return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>
+  }
+}
+
 
 export default DevicePage;
 
