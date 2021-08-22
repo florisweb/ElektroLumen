@@ -1,5 +1,6 @@
 
 import SideBar from './sideBar';
+import Server from './server';
 import MainContent from './mainContent/mainContent';
 import '../css/component.css';
 import '../css/App.css';
@@ -18,8 +19,12 @@ const App = new function() {
 
   this.setup = async function() {
     await SideBar.update();
+
+    let devices = await Server.getDevices()
+    if (devices.length < 1) return;
+    MainContent.devicePage.open(devices[0]);
   }
 }
 
-// App.setup();
+App.setup();
 export default App;

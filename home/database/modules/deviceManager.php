@@ -77,7 +77,8 @@
       return array(
         "id"            => $this->id,
         "name"          => $this->DBHelper->name,
-        "registerTime"  => $this->DBHelper->registerTime
+        "registerTime"  => $this->DBHelper->registerTime,
+        "UIDefinition"  => $this->DBHelper->UIDefinition
       );
     }
 

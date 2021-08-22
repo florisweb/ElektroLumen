@@ -10,37 +10,6 @@ import {Page, PageHeader} from './page.js';
 window.graph = {};
 
 function DevicePage({device}) {
-  device.UIDefinition = [
-    {
-      type: 'Variable',
-      parameters: [
-        'Moisture',
-        '50%'
-      ]
-    },
-    {
-      type: 'Variable',
-      parameters: [
-        'Humidity',
-        '72%'
-      ]
-    },
-    {
-      type: 'Variable',
-      parameters: [
-        'Temperature',
-        '21.0*'
-      ]
-    },
-    {
-      type: 'Variable',
-      parameters: [
-        'Light Intensity',
-        '25 Lux'
-      ]
-    }
-  ];
-
   let UI = UIDefListToObjects(device.UIDefinition);
   return (
     <Page controlObject={MainContent.devicePage}>
