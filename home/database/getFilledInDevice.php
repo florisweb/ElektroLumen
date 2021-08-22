@@ -1,6 +1,7 @@
 <?php
   require_once __DIR__ . '/modules/deviceManager.php';
   $_id = (int)$_POST['id'];
+  global $device;
   $device = $DeviceManager->getDeviceById($_id);
   if (is_string($device)) die(json_encode(array(
     "result" => false,
@@ -28,12 +29,42 @@
   $newDevice['UIDefinition'] = $filledInUI;
 
 
-  
   function resolveParameter($_parameter) {
-    return $_parameter . '123';
+    $newString = replacePlaceHolderWithIndex('[STATE', $_parameter);
+    $newString = replacePlaceHolderWithIndex('[ROWS_GETPROP', $newString);
+    return $newString;
   }
 
-  
+  function replacePlaceHolderWithIndex($_type, $_parameter) {
+    $parts = explode($_type, $_parameter);
+    $newString = $parts[0];
+    for ($i = 1; $i < sizeof($parts); $i++)
+    {
+      $subParts = explode(']', $parts[$i]);  
+      if (sizeof($subParts) < 2) 
+      {
+        $newString .= $_type . $parts[$i];
+        continue;
+      }
+
+      $index = (int)$subParts[0];
+      $value = getValueByTypeAndIndex($_type, $index);
+      $newString .= $value . join(array_splice($subParts, 1, 1000), ']');
+    }
+
+    return $newString;
+  }
+
+  function getValueByTypeAndIndex($_type, $_index) {
+      if ($_type == '[ROWS_GETPROP') return 'R' . $_index . 'R';
+
+      // Get state
+      if (!isset($GLOBALS['device']->getStateValues()[$_index])) return "[E_InvalidStateIndex]";
+      return $GLOBALS['device']->getStateValues()[$_index];
+  }
+
+
+
   
   
   $output = array(

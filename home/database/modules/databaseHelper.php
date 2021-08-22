@@ -85,6 +85,7 @@
     public $registerTime;
     public $lastUpdateTime;
     public $UIDefinition;
+    public $stateValues;
     public $ip;
 
     public $errorOnCreation = false;
@@ -93,8 +94,7 @@
       $this->DB   = $_DB;
       $this->id   = (int)$_id;
 
-
-      $response = $this->DB->execute("SELECT name, ownerId, registerTime, lastUpdateTime, ip, UIDefinition FROM $this->DBTableName WHERE id=? LIMIT 1", [
+      $response = $this->DB->execute("SELECT name, ownerId, registerTime, lastUpdateTime, ip, UIDefinition, stateValues FROM $this->DBTableName WHERE id=? LIMIT 1", [
         $this->id
       ]);
       if (sizeof($response) != 1) return $this->errorOnCreation = 'E_deviceNotFound';
@@ -104,6 +104,7 @@
       $this->registerTime   = $response[0]['registerTime'];
       $this->lastUpdateTime = $response[0]['lastUpdateTime'];
       $this->UIDefinition   = json_decode($response[0]['UIDefinition'], true);
+      $this->stateValues    = json_decode($response[0]['stateValues'], true);
       $this->ip             = $response[0]['ip'];
     }
 

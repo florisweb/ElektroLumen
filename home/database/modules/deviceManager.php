@@ -91,6 +91,9 @@
         "isBound" => !!$this->DBHelper->ownerId
       );
     }
+    public function getStateValues() {
+      return $this->DBHelper->stateValues;
+    }
 
     public function updateUpdateTime() {
       return $this->DBHelper->updateUpdateTime();
