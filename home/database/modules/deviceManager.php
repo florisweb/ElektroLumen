@@ -61,6 +61,10 @@
       if (is_string($this->DBHelper)) $this->errorOnCreation = $this->DBHelper;
     }
 
+    public function curUserIsOwner() {
+      return $this->getOwnerId() == $this->DBHelper->ownerId;
+    }
+
     public function getOwnerId() {
       return $this->DBHelper->ownerId;
     }

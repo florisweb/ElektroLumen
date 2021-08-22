@@ -5,6 +5,10 @@ const Server = new function() {
     return await this.fetchData('database/getDeviceList.php');
   }
 
+  this.getFilledInDevice = async function(_id) {
+    return await this.fetchData('database/getFilledInDevice.php', "id=" + _id);
+  }
+
   this.getUnboundDevices = async function() {
     return await this.fetchData('database/getUnboundDevices.php');
   }
