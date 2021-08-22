@@ -31,8 +31,8 @@ const PairMenu = new function() {
 }
 
 function PairMenuElement() {
-  let binding = false;
-  let openState = false;
+  let binding;
+  let openState;
   [binding, setBindState] = React.useState(false);
   [openState, setOpenState] = React.useState(false);
 

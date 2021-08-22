@@ -21,5 +21,5 @@ const App = new function() {
   }
 }
 
-App.setup();
+// App.setup();
 export default App;
