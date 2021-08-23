@@ -6,7 +6,7 @@
 
 ### Linked Variables
 NI - '[STATE' + index + ']': Returns the value on that index of the devices state
-NI - '[ROWS_GETPROP' + index + ']': Returns an array of all the index-th properties of all the rows
+NI - '[DATA_COLUMN' + index + ']': Returns an array of all the index-th items of all the rows
 NI - '[ROWS_LATEST]': Returns the latest row
 
 

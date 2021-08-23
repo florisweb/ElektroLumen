@@ -135,14 +135,27 @@
 
     public function addDataRow($_data) {
       $this->updateUpdateTime();
-      return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, data) VALUES (?, ?)", [
+      return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, deviceData) VALUES (?, ?)", [
         $this->id,
         json_encode($_data)
       ]);
     }
 
+    public function getLatestNRows($_n) {
+      $rows = $this->DB->execute("SELECT deviceData FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate DESC LIMIT ?", [
+        $this->id,
+        $_n,
+      ]);
+      $data = [];
+      for ($i = 0; $i < sizeof($rows); $i++)
+      {
+        array_push($data, json_decode($rows[$i]["deviceData"], true));
+      }
+      return $data;
+    }
+
     public function getAllData() {
-      return $this->DB->execute("SELECT data, createDate FROM $this->DBDataTableName WHERE id=?", [
+      return $this->DB->execute("SELECT deviceData, createDate FROM $this->DBDataTableName WHERE id=?", [
         $this->id
       ]);
     }

@@ -95,6 +95,17 @@
       return $this->DBHelper->stateValues;
     }
 
+    public function getDataByColumn($_index) {
+      $allData = $this->DBHelper->getLatestNRows(100);
+      $columnData = [];
+      for ($i = 0; $i < sizeof($allData); $i++)
+      {
+        if (!isset($allData[$i][$_index])) return "E_InvalidColumnIndex";
+        array_push($columnData, $allData[$i][$_index]);
+      }
+      return $columnData;
+    }
+
     public function updateUpdateTime() {
       return $this->DBHelper->updateUpdateTime();
     }

@@ -9,5 +9,4 @@
 	if (!$device || is_string($device)) die($device);
 
 	echo $device->addDataRow($_data) ? 'true' : 'false';
-
 ?>

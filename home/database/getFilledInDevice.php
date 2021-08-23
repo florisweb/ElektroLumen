@@ -31,7 +31,7 @@
 
   function resolveParameter($_parameter) {
     $newString = replacePlaceHolderWithIndex('[STATE', $_parameter);
-    $newString = replacePlaceHolderWithIndex('[ROWS_GETPROP', $newString);
+    $newString = replacePlaceHolderWithIndex('[DATA_COLUMN', $newString);
     return $newString;
   }
 
@@ -56,8 +56,10 @@
   }
 
   function getValueByTypeAndIndex($_type, $_index) {
-      if ($_type == '[ROWS_GETPROP') return 'R' . $_index . 'R';
-
+      if ($_type == '[DATA_COLUMN') 
+      {
+        return json_encode($GLOBALS['device']->getDataByColumn($_index));
+      }
       // Get state
       if (!isset($GLOBALS['device']->getStateValues()[$_index])) return "[E_InvalidStateIndex]";
       return $GLOBALS['device']->getStateValues()[$_index];
