@@ -33,6 +33,8 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
 }
 
 export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
+  const axisMargin = 20;
+
   if (!yRange)
   {
     let minY = Infinity;
@@ -43,25 +45,65 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       if (maxY < data[i]) maxY = data[i];
     }
     yRange = [minY, maxY];
-}
+  }
 
   function draw(ctx) {
     ctx.canvas.width = ctx.canvas.offsetWidth;
     ctx.canvas.height = ctx.canvas.offsetHeight;
 
-    let y = ctx.canvas.height - (data[0] - yRange[0]) / (yRange[1] - yRange[0]) * ctx.canvas.height;
+    drawData(ctx);
+    drawXAxis(ctx);
+    drawYAxis(ctx);
+  }
+
+  function drawData(ctx) {
+    let y = dataToYLoc(data[0], ctx);
     ctx.strokeStyle = '#f00';
-    ctx.moveTo(0, y);
+    ctx.beginPath();
+    ctx.moveTo(axisMargin, y);
 
     for (let i = 1; i < data.length; i++)
     {
-      let x = i * ctx.canvas.width / (data.length - 1);
-      let y = ctx.canvas.height - (data[i] - yRange[0]) / (yRange[1] - yRange[0]) * ctx.canvas.height;
+      let x = indexToXLoc(i, ctx);
+      let y = dataToYLoc(data[i], ctx);
       ctx.lineTo(x, y);
     }
 
     ctx.stroke();
   }
+
+
+  function drawXAxis(ctx) {
+    ctx.strokeStyle = '#444';
+    let y = dataToYLoc(0, ctx);
+    
+    ctx.beginPath();
+    ctx.moveTo(axisMargin, y);
+    ctx.lineTo(ctx.canvas.width, y);
+    
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  function drawYAxis(ctx) {
+    ctx.strokeStyle = '#444';
+    
+    ctx.beginPath();
+    ctx.moveTo(axisMargin, 0);
+    ctx.lineTo(axisMargin, ctx.canvas.height);
+    
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  function indexToXLoc(_index, ctx) {
+    return _index / (data.length - 1) * (ctx.canvas.width - axisMargin) + axisMargin;
+  }
+  function dataToYLoc(_value, ctx) {
+    return ctx.canvas.height - (_value - yRange[0]) / (yRange[1] - yRange[0]) * ctx.canvas.height;
+  }
+
+
 
   return <BaseGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} drawCallback={draw}/>
 }
