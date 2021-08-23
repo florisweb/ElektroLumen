@@ -3,8 +3,8 @@
 .Component.panel {
   position: relative;
   display: flex;
+
   padding: 20px;
-  margin: 5px;
 
   border-radius: 5px;
   background: rgba(0, 0, 0, .05);
@@ -20,11 +20,12 @@
 }
 
 
-
 .Component.panel.lineGraph {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 4;
   padding: 0px;
-  width: 50vw;
-  height: 30vh;
   background-color: #fff;
   box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .06);
 }

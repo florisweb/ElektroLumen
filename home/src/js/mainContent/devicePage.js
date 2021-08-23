@@ -5,20 +5,16 @@ import MainContent from './mainContent.js';
 import { Variable, LineGraph } from './components.js';
 
 
-import {Page, PageHeader} from './page.js';
+import {Page, PageHeader, PageContent} from './page.js';
 
 window.graph = {};
 
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
-  let data = [[], []];
-  for (let i = 0; i < 20; i++) data[0].push(Math.random() * 100 + 25);
-  for (let i = 0; i < 20; i++) data[1].push(Math.random() * 100 - 25);
   return (
     <Page controlObject={MainContent.devicePage}>
       <PageHeader title={device.name}/>
-      {UI}
-      <LineGraph xAxisTag={'time (h)'} yAxisTag={'Moisture (%)'} data={data}/>;
+      <PageContent>{UI}</PageContent>
     </Page>
   );
 }

@@ -20,29 +20,10 @@ export function PageHeader({title}) {
   );
 }
 
-
-
-// class Page extends Component {
-
-//   // (Header, Content)
-//   // let setOpenState;
-//   render() {
-//     let [openState, setState] = React.useState([]);
-//     // setOpenState = setState;
-//     return (
-//       <div className={'page ' + openState ? '' : 'hide'}>
-//         {/* <Header/> */}
-//         {/* <Content/> */}
-//       </div>
-//     );
-//   }
-
-//   open() {
-//     // setOpenState(true);
-//   }
-
-//   close() {
-//     // setOpenState(false); 
-//   }
-// }
-
+export function PageContent({children}) {
+  return (
+    <div className='content'> 
+      {children}
+    </div>
+  );
+}
