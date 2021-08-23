@@ -17,5 +17,12 @@
 }
 .Component.panel.variable .text.value {
   color: #333;
+}
 
+
+
+.Component.panel.lineGraph {
+  padding: 5px;
+  width: 50vw;
+  height: 20vh;
 }

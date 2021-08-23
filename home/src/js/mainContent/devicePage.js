@@ -1,8 +1,8 @@
 
 import React from 'react';
 import MainContent from './mainContent.js';
-import { LineGraph } from '../dataVisualizer.js';
-import { Variable } from './components.js';
+
+import { Variable, LineGraph } from './components.js';
 
 
 import {Page, PageHeader} from './page.js';
@@ -11,12 +11,21 @@ window.graph = {};
 
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
+  let data = [
+    0,
+    50,
+    55,
+    54,
+    35,
+    40
+  ];
+
   return (
     <Page controlObject={MainContent.devicePage}>
       <PageHeader title={device.name}/>
       {UI}
 
-      <LineGraph controlObject={window.graph} xAxisTag='Time (h)' yAxisTag='Moisture (%)'/>
+      <LineGraph controlObject={window.graph} xAxisTag='Time (h)' yAxisTag='Moisture (%)' data={data}/>
     </Page>
   );
 }

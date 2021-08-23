@@ -1,0 +1,52 @@
+
+
+.DV.GraphHolder {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-areas:
+      'yAxis canvas'
+      'empty xAxis';
+  grid-template-rows: auto 20px;
+  grid-template-columns: 20px auto;
+
+  border: 1px solid red;
+}
+
+.DV.GraphHolder .Canvas {
+  grid-area: canvas;
+  width: 100%;
+  height: calc(100% - 20px);
+  border: 1px solid orange;
+}
+
+
+.DV.GraphHolder .AxisText {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+
+  color: #777;
+	font-size: 10px;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 20px;
+}
+
+.DV.GraphHolder .AxisText.xAxisTag {
+  grid-area: xAxis;
+}
+
+.DV.GraphHolder .yAxisTagHolder {
+  grid-area: yAxis;
+  width: 20px;
+  height: 100%;
+}
+
+.DV.GraphHolder .AxisText.yAxisTag {
+  position: relative;
+  width: 1000px;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%) rotateZ(-90deg);
+}
