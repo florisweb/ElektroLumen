@@ -33,7 +33,8 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
 }
 
 export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
-  const axisMargin = 20;
+  const yLabelMargin = 20;
+  const xLabelMargin = 15;
   const nonAxisMargin = 15;
   
   const axisColor = '#999';
@@ -72,7 +73,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#f00';
     ctx.beginPath();
-    ctx.moveTo(axisMargin, y);
+    ctx.moveTo(yLabelMargin, y);
 
     for (let i = 1; i < data.length; i++)
     {
@@ -94,7 +95,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     let y = dataToYLoc(0, ctx);
     
     ctx.beginPath();
-    ctx.moveTo(axisMargin, y);
+    ctx.moveTo(yLabelMargin, y);
     ctx.lineTo(ctx.canvas.width, y);
     
     ctx.closePath();
@@ -109,17 +110,17 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       let xLoc = indexToXLoc(x, ctx);
       ctx.beginPath();
       ctx.moveTo(xLoc, 0);
-      ctx.lineTo(xLoc, ctx.canvas.height - axisMargin);
+      ctx.lineTo(xLoc, ctx.canvas.height - xLabelMargin);
       
       ctx.closePath();
       ctx.stroke();
 
       if (x === 0) continue;
+
       ctx.fillStyle = numberColor;
-      ctx.fillText(x, xLoc, ctx.canvas.height - axisMargin / 2);
+      ctx.fillText(String(x).substr(0, 4), xLoc, ctx.canvas.height - xLabelMargin * .5);
       ctx.fill();
     }
-
   }
 
   function drawYAxis(ctx) {
@@ -129,8 +130,8 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     ctx.strokeStyle = axisColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(axisMargin, 0);
-    ctx.lineTo(axisMargin, ctx.canvas.height - axisMargin);
+    ctx.moveTo(yLabelMargin, 0);
+    ctx.lineTo(yLabelMargin, ctx.canvas.height - xLabelMargin);
     
     ctx.closePath();
     ctx.stroke();
@@ -143,24 +144,24 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       ctx.strokeStyle = subAxisColor;
       let yLoc = dataToYLoc(y, ctx);
       ctx.beginPath();
-      ctx.moveTo(axisMargin, yLoc);
+      ctx.moveTo(yLabelMargin, yLoc);
       ctx.lineTo(ctx.canvas.width, yLoc);
       
       ctx.closePath();
       ctx.stroke();
 
       ctx.fillStyle = numberColor;
-      ctx.fillText(y, axisMargin - 5, yLoc);
+      ctx.fillText(String(y).substr(0, 4), yLabelMargin - 5, yLoc);
       ctx.fill();
     }
   }
 
   function indexToXLoc(_index, ctx) {
-    return _index / (data.length - 1) * (ctx.canvas.width - axisMargin - nonAxisMargin) + axisMargin;
+    return _index / (data.length - 1) * (ctx.canvas.width - yLabelMargin - nonAxisMargin) + yLabelMargin;
   }
   function dataToYLoc(_value, ctx) {
     let perc = (_value - yRange[0]) / (yRange[1] - yRange[0]);
-    return (ctx.canvas.height - axisMargin) - perc * (ctx.canvas.height - axisMargin - nonAxisMargin);
+    return (ctx.canvas.height - xLabelMargin) - perc * (ctx.canvas.height - xLabelMargin - nonAxisMargin);
   }
 
   function getStepSize(_maxSteps, _delta) {
