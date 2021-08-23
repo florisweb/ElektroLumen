@@ -132,7 +132,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       if (x === 0) continue;
 
       ctx.fillStyle = numberColor;
-      ctx.fillText(String(x).substr(0, 4), xLoc, ctx.canvas.height - xLabelMargin * .5);
+      ctx.fillText(String(x).substr(0, 4), xLoc, y + xLabelMargin * .5);
       ctx.fill();
     }
   }
