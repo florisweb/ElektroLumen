@@ -13,7 +13,7 @@
   column-gap: 0;
 }
 
-.DV.GraphHolder .Canvas {
+.DV.GraphHolder canvas {
   grid-area: canvas;
   width: 100%;
   height: calc(100% - 20px);

@@ -1,17 +1,28 @@
 import '../css/dataVisualizer.css';
 import React, { useRef, useEffect, componentDidUpdate } from 'react'
 
+const Colors = [
+  '#f00',
+  '#0f0',
+  '#00f',
+  '#fa0',
+  '#af0',
+  '#0fa',
+];
+
+
 function Canvas(props) {
+  let drawHandler = props.draw;
   const canvasRef = useRef(null);
   useEffect(() => {update();});
 
   function update() {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    props.draw(ctx);
+    drawHandler(ctx);
   }
 
-  return <canvas ref={canvasRef} {...props}/>
+  return <canvas ref={canvasRef}/>
 }
 
 
@@ -28,7 +39,7 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
       <div className='yAxisTagHolder'>
         <div className='AxisText yAxisTag'>{yAxisTag}</div>
       </div>
-      <Canvas className='Canvas' draw={drawCallback} ctx={window.ctx}></Canvas>
+      <Canvas draw={drawCallback} ctx={window.ctx}></Canvas>
     </div>
   )
 }
@@ -45,45 +56,41 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   const numberColor = '#666';
   const minLabelRoom = 20; //px
 
-  if (!yRange)
-  {
-    let minY = Infinity;
-    let maxY = -Infinity;
-    for (let i = 0; i < data.length; i++)
-    {
-      if (minY > data[i]) minY = data[i];
-      if (maxY < data[i]) maxY = data[i];
-    }
-    yRange = [minY, maxY];
-  }
+  if (!yRange) yRange = calcYRange(data);
+  let xRange = calcXRange(data);
+
 
   const dy = yRange[1] - yRange[0];
-  const dx = data.length;
+  const dx = xRange[1];
 
 
   function draw(ctx) {
-    console.log('draw');
     ctx.canvas.width = ctx.canvas.offsetWidth;
     ctx.canvas.height = ctx.canvas.offsetHeight;
 
     drawXAxis(ctx);
     drawYAxis(ctx);
-    drawData(ctx);
+    if (!data[0]) return;
+    if (typeof data[0] != 'object') return drawLine(ctx, data);
+    for (let i = 0; i < data.length; i++)
+    {
+      drawLine(ctx, data[i], Colors[i]);
+    }
   }
 
 
 
-  function drawData(ctx) {
-    let y = dataToYLoc(data[0], ctx);
+  function drawLine(ctx, _data, _lineColor = '#f00') {
+    let y = dataToYLoc(_data[0], ctx);
     ctx.lineWidth = 1;
-    ctx.strokeStyle = '#f00';
+    ctx.strokeStyle = _lineColor;
     ctx.beginPath();
     ctx.moveTo(yLabelMargin, y);
 
-    for (let i = 1; i < data.length; i++)
+    for (let i = 1; i < _data.length; i++)
     {
       let x = indexToXLoc(i, ctx);
-      let y = dataToYLoc(data[i], ctx);
+      let y = dataToYLoc(_data[i], ctx);
       ctx.lineTo(x, y);
     }
 
@@ -109,7 +116,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     ctx.lineWidth = .5;
     ctx.textAlign = 'center';
     ctx.textBaseline = "middle"; 
-    for (let x = 0; x < data.length + stepSize; x += stepSize)
+    for (let x = 0; x < xRange[1] + stepSize; x += stepSize)
     {
       ctx.strokeStyle = subAxisColor;
       let xLoc = indexToXLoc(x, ctx);
@@ -162,7 +169,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
 
   function indexToXLoc(_index, ctx) {
-    return _index / (data.length - 1) * (ctx.canvas.width - yLabelMargin - nonAxisMargin) + yLabelMargin;
+    return _index / (xRange[1] - 1) * (ctx.canvas.width - yLabelMargin - nonAxisMargin) + yLabelMargin;
   }
   function dataToYLoc(_value, ctx) {
     let perc = (_value - yRange[0]) / (yRange[1] - yRange[0]);
@@ -180,6 +187,41 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
 
     return stepOptions[stepOptions.length - 1];
   }
+
+  function calcXRange(_data) {
+    if (typeof data[0] != 'object') return [0, _data.length];
+    let maxRange = 0;
+    for (let lineData of _data)
+    {
+     if (lineData.length > maxRange) maxRange = lineData.length;
+    }
+    return [0, maxRange];
+  }
+
+  function calcYRange(_data) {
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    if (typeof data[0] != 'object') return calcYRangePerDataSet(_data);
+    for (let lineData of _data)
+    {
+      let range = calcYRangePerDataSet(lineData);
+      if (range[0] < minY) minY = range[0];
+      if (range[1] > maxY) maxY = range[1];
+    }
+    return [minY, maxY];
+  }
+  function calcYRangePerDataSet(_data) {
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let i = 0; i < _data.length; i++)
+    {
+      if (minY > _data[i]) minY = _data[i];
+      if (maxY < _data[i]) maxY = _data[i];
+    }
+    return [minY, maxY];
+  }
+
 
 
 
