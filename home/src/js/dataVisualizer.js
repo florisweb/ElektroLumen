@@ -105,13 +105,15 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = axisColor;
     let y = dataToYLoc(0, ctx);
-    
-    ctx.beginPath();
-    ctx.moveTo(yLabelMargin, y);
-    ctx.lineTo(ctx.canvas.width, y);
-    
-    ctx.closePath();
-    ctx.stroke();
+    if (typeof y == 'number')
+    {
+      ctx.beginPath();
+      ctx.moveTo(yLabelMargin, y);
+      ctx.lineTo(ctx.canvas.width, y);
+      
+      ctx.closePath();
+      ctx.stroke();
+    }
 
     ctx.lineWidth = .5;
     ctx.textAlign = 'center';
@@ -151,10 +153,11 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     ctx.lineWidth = .5;
     ctx.textAlign = 'right';
     ctx.textBaseline = "middle"; 
-    for (let y = 0; y < yRange[1] + stepSize; y += stepSize)
+    for (let y = Math.floor(yRange[0] / stepSize) * stepSize; y < yRange[1] + stepSize; y += stepSize)
     {
       ctx.strokeStyle = subAxisColor;
       let yLoc = dataToYLoc(y, ctx);
+      if (typeof yLoc != 'number') continue;
       ctx.beginPath();
       ctx.moveTo(yLabelMargin, yLoc);
       ctx.lineTo(ctx.canvas.width, yLoc);
@@ -173,6 +176,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
   function dataToYLoc(_value, ctx) {
     let perc = (_value - yRange[0]) / (yRange[1] - yRange[0]);
+    if (perc < 0 || perc > 1.1) return false;
     return (ctx.canvas.height - xLabelMargin) - perc * (ctx.canvas.height - xLabelMargin - nonAxisMargin);
   }
 

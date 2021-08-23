@@ -12,8 +12,8 @@ window.graph = {};
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
   let data = [[], []];
-  for (let i = 0; i < 20; i++) data[0].push(Math.random() * 100);
-  for (let i = 0; i < 20; i++) data[1].push(Math.random() * 100);
+  for (let i = 0; i < 20; i++) data[0].push(Math.random() * 100 + 25);
+  for (let i = 0; i < 20; i++) data[1].push(Math.random() * 100 - 25);
   return (
     <Page controlObject={MainContent.devicePage}>
       <PageHeader title={device.name}/>
