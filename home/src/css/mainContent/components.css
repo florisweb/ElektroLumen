@@ -22,7 +22,9 @@
 
 
 .Component.panel.lineGraph {
-  padding: 5px;
+  padding: 10px;
   width: 50vw;
   height: 20vh;
+  background-color: #fff;
+  box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .06);
 }

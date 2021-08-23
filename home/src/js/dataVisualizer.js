@@ -33,7 +33,8 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
 }
 
 export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
-  const axisMargin = 20;
+  const axisMargin = 0;
+  const axisColor = '#999';
 
   if (!yRange)
   {
@@ -74,7 +75,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
 
 
   function drawXAxis(ctx) {
-    ctx.strokeStyle = '#444';
+    ctx.strokeStyle = axisColor;
     let y = dataToYLoc(0, ctx);
     
     ctx.beginPath();
@@ -86,7 +87,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
 
   function drawYAxis(ctx) {
-    ctx.strokeStyle = '#444';
+    ctx.strokeStyle = axisColor;
     
     ctx.beginPath();
     ctx.moveTo(axisMargin, 0);
