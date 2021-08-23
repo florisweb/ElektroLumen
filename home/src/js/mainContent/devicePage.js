@@ -11,16 +11,11 @@ window.graph = {};
 
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
-  let data = [
-    0,
-    50,
-    55,
-    54,
-    35,
-    40,
-    0,
-    300
-  ];
+  let data = [0, 1];
+  while (Math.random() > .1)
+  {
+    data.push(100 * Math.random());
+  }
 
   return (
     <Page controlObject={MainContent.devicePage}>
