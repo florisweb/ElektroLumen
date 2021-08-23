@@ -39,7 +39,7 @@ const MainContent = new function() {
 
 function MainContentElement() {
   [curDevice, setCurDevice] = React.useState({name: '...'});
-
+  console.log(curDevice);
   return (
     <div id='mainContent'>
       <DevicePage device={curDevice}/>

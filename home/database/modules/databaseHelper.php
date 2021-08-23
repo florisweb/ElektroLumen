@@ -142,7 +142,7 @@
     }
 
     public function getLatestNRows($_n) {
-      $rows = $this->DB->execute("SELECT deviceData FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate DESC LIMIT ?", [
+      $rows = $this->DB->execute("SELECT deviceData FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate ASC LIMIT ?", [
         $this->id,
         $_n,
       ]);

@@ -12,9 +12,13 @@ export function Variable({name, value}) {
 
 
 export function LineGraph({xAxisTag, yAxisTag, data, controlObject}) {
+  let actualData = [];
+  try {
+    actualData = typeof data == 'string' ? JSON.parse(data) : data;
+  } catch (e) {};
   return (
     <div className='Component panel lineGraph'> 
-      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} data={data} controlObject={controlObject}/>
+      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} data={actualData} controlObject={controlObject}/>
     </div>
   )
 }

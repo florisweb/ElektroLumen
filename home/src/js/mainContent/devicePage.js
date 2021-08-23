@@ -11,18 +11,10 @@ window.graph = {};
 
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
-  let data = [0, 1];
-  while (Math.random() > .01)
-  {
-    data.push(100 * Math.random());
-  }
-
   return (
     <Page controlObject={MainContent.devicePage}>
       <PageHeader title={device.name}/>
       {UI}
-
-      <LineGraph controlObject={window.graph} xAxisTag='Time (h)' yAxisTag='Moisture (%)' data={data}/>
     </Page>
   );
 }
@@ -37,11 +29,17 @@ function UIDefListToObjects(_UIDefList = []) {
 }
 
 function UIDefToObjects(_Def) {
+  console.log(_Def);
   switch (_Def.type) 
   {
-    case 'Variable': return <Variable name={_Def.parameters[0]} value={_Def.parameters[1]}/>;
-    case 'LineGraph': return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} data={_Def.parameters[2]}/>;
-    default: return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>
+    case 'Variable': 
+      return <Variable name={_Def.parameters[0]} value={_Def.parameters[1]}/>;
+    
+    case 'LineGraph': 
+      return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} data={_Def.parameters[2]}/>;
+    
+    default: 
+      return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>
   }
 }
 

@@ -1,19 +1,20 @@
 import '../css/dataVisualizer.css';
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, componentDidUpdate } from 'react'
 
 function Canvas(props) {
-  const canvasRef = useRef(null)
-  
-  useEffect(() => {
+  const canvasRef = useRef(null);
+  useEffect(() => {update();});
+
+  function update() {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    //Our first draw
-    // props.ctx = ctx;
     props.draw(ctx);
-  }, [])
-  
+  }
+
   return <canvas ref={canvasRef} {...props}/>
 }
+
+
 
 
 
@@ -33,6 +34,8 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
 }
 
 export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
+  console.log('create lineGraph', ...arguments);
+
   const yLabelMargin = 20;
   const xLabelMargin = 15;
   const nonAxisMargin = 15;
@@ -59,14 +62,16 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
 
 
   function draw(ctx) {
+    console.log('draw');
     ctx.canvas.width = ctx.canvas.offsetWidth;
     ctx.canvas.height = ctx.canvas.offsetHeight;
-    
 
     drawXAxis(ctx);
     drawYAxis(ctx);
     drawData(ctx);
   }
+
+
 
   function drawData(ctx) {
     let y = dataToYLoc(data[0], ctx);
