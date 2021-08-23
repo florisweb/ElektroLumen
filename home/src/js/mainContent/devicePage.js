@@ -17,7 +17,8 @@ function DevicePage({device}) {
     55,
     54,
     35,
-    40
+    40,
+    -20
   ];
 
   return (

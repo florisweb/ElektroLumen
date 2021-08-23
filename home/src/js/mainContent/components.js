@@ -11,10 +11,10 @@ export function Variable({name, value}) {
 }
 
 
-export function LineGraph({xAxisTag, yAxisTag, controlObject}) {
+export function LineGraph({xAxisTag, yAxisTag, data, controlObject}) {
   return (
     <div className='Component panel lineGraph'> 
-      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} controlObject={controlObject}/>
+      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} data={data} controlObject={controlObject}/>
     </div>
   )
 }
