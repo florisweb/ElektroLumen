@@ -12,7 +12,7 @@ window.graph = {};
 function DevicePage({device}) {
   let UI = UIDefListToObjects(device.UIDefinition);
   let data = [0, 1];
-  while (Math.random() > .1)
+  while (Math.random() > .01)
   {
     data.push(100 * Math.random());
   }
@@ -40,6 +40,7 @@ function UIDefToObjects(_Def) {
   switch (_Def.type) 
   {
     case 'Variable': return <Variable name={_Def.parameters[0]} value={_Def.parameters[1]}/>;
+    case 'LineGraph': return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} data={_Def.parameters[2]}/>;
     default: return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>
   }
 }

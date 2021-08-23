@@ -165,7 +165,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
 
   function getStepSize(_maxSteps, _delta) {
-    const stepOptions = [.01, .05, .1, .5, 1, 5, 10, 20, 50, 100, 200, 500, 1000];
+    const stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
     for (let i = 0; i < stepOptions.length; i++)
     {
       let steps = _delta / stepOptions[i];
