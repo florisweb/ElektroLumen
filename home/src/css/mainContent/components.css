@@ -35,8 +35,6 @@
 
 
 .Component.panel.lineGraph {
-  width: calc(2 * var(--componentWidth) - 10px * 2);
-  height: calc(2 * var(--componentHeight) - 10px * 2);
   padding: 0px;
 
   background-color: #fff;

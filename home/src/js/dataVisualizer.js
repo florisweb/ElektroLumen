@@ -1,5 +1,5 @@
 import '../css/dataVisualizer.css';
-import React, { useRef, useEffect, componentDidUpdate } from 'react'
+import React, { useRef, useEffect } from 'react'
 
 const Colors = [
   '#f00',
@@ -201,7 +201,7 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
   }
 
   function getStepSize(_maxSteps, _delta, _isDateIndex = false) {
-    let stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
+    let stepOptions = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
     if (_isDateIndex) stepOptions = [1, 5, 10, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 14400, 21600, 43200, 86400, 172800, 604800, 864000];
 
     for (let i = 0; i < stepOptions.length; i++)

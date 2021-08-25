@@ -37,10 +37,3 @@
 
     line-height: 30px;
 }
-
-
-
-#mainContent .content {
-    position: relative;
-    grid-area: content;
-}
