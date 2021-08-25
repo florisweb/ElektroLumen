@@ -54,10 +54,11 @@
 
     public function registerDevice($_data) {
       $token    = $this->createId();
-      $response = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name, ip, lastUpdateTime) VALUES (?, ?, ?, ?)", array(
+      $response = $this->DB->execute("INSERT INTO $this->DeviceListTableName (token, name, ip, lastUpdateTime, registerTime) VALUES (?, ?, ?, ?, ?)", array(
         $token,
         (string)$_data['name'],
         getIP(),
+        time(),
         time()
       ));
 
@@ -135,21 +136,22 @@
 
     public function addDataRow($_data) {
       $this->updateUpdateTime();
-      return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, deviceData) VALUES (?, ?)", [
+      return $this->DB->execute("INSERT INTO $this->DBDataTableName (deviceId, deviceData, createTime) VALUES (?, ?, ?)", [
         $this->id,
-        json_encode($_data)
+        json_encode($_data),
+        time()
       ]);
     }
 
     public function getLatestNRows($_n) {
-      return $this->DB->execute("SELECT deviceData, createDate FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate ASC LIMIT ?", [
+      return $this->DB->execute("SELECT deviceData, createTime FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createTime ASC LIMIT ?", [
         $this->id,
         $_n,
       ]);
     }
 
     public function getAllData() {
-      return $this->DB->execute("SELECT deviceData, createDate FROM $this->DBDataTableName WHERE id=?", [
+      return $this->DB->execute("SELECT deviceData, createTime FROM $this->DBDataTableName WHERE id=?", [
         $this->id
       ]);
     }

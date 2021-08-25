@@ -106,7 +106,7 @@
         $curIndex = $i;
         if ($_dateIndexed)
         {
-          $curIndex = $allData[$i]["createDate"];
+          $curIndex = $allData[$i]["createTime"];
         }
 
         $obj = array(
