@@ -54,10 +54,13 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
   const axisColor = '#999';
   const subAxisColor = '#ddd';
   const numberColor = '#666';
-  const minLabelRoom = 20; //px
+  const minXLabelRoom = 30; //px
+  const minYLabelRoom = 20; //px
 
   if (!yRange) yRange = calcRange(lines, 1);
   let xRange = calcRange(lines, 0);
+  
+  const xAxisTagIsDate = xRange[0] > 1000000000;
   console.log('range', xRange, yRange);
 
   const dy = yRange[1] - yRange[0];
@@ -103,8 +106,8 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
 
 
   function drawXAxis(ctx) {
-    let maxStepCount = Math.floor(ctx.canvas.width / minLabelRoom);
-    const stepSize = getStepSize(maxStepCount, dx);
+    let maxStepCount = Math.floor(ctx.canvas.width / minXLabelRoom);
+    const stepSize = getStepSize(maxStepCount, dx, xAxisTagIsDate);
 
     ctx.lineWidth = 1;
     ctx.strokeStyle = axisColor;
@@ -122,7 +125,7 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
     ctx.lineWidth = .5;
     ctx.textAlign = 'center';
     ctx.textBaseline = "middle"; 
-    for (let x = Math.floor(xRange[0] / stepSize) * stepSize; x < xRange[1] + stepSize; x += stepSize)
+    for (let x = Math.ceil(xRange[0] / stepSize) * stepSize; x < xRange[1] + stepSize; x += stepSize)
     {
       ctx.strokeStyle = subAxisColor;
       let xLoc = indexToXLoc(x, ctx);
@@ -134,23 +137,28 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
       ctx.stroke();
 
       if (x === 0) continue;
-      let labelText = String(x).substr(0, 4);
-      if (x > 1000000000)
-      {
-        let date = new Date();
-        date.setTime(x * 1000);
-        labelText = date.getSeconds();
-      }
-
+      
       ctx.fillStyle = numberColor;
-      ctx.fillText(labelText, xLoc, y + xLabelMargin * .5);
+      ctx.fillText(getXLabelText(x, stepSize), xLoc, y + xLabelMargin * .5);
       ctx.fill();
     }
   }
 
+  function getXLabelText(_index, _stepSize) {
+    if (!xAxisTagIsDate) return String(_index).substr(0, 4);
+    let date = new Date();
+    date.setTime(_index * 1000);
+    if (_stepSize < 60) return date.getMinutes() + ":" + numberToTwoDigitString(date.getSeconds());
+    if (_stepSize < 60 * 60) return numberToTwoDigitString(date.getHours()) + ":" + numberToTwoDigitString(date.getMinutes());
+    if (_stepSize < 60 * 60 * 24) return date.getHours();
+    // if (_stepSize < 60 * 60 * 24 * 7) 
+    return numberToTwoDigitString(date.getDate()) + "-" + numberToTwoDigitString(date.getMonth() + 1);
+  }
+ 
+
   function drawYAxis(ctx) {
-    let maxStepCount = Math.floor(ctx.canvas.height / minLabelRoom);
-    const stepSize = getStepSize(maxStepCount, dy);
+    let maxStepCount = Math.floor(ctx.canvas.height / minYLabelRoom);
+    const stepSize = getStepSize(maxStepCount, dy, xAxisTagIsDate);
     
     ctx.strokeStyle = axisColor;
     ctx.lineWidth = 1;
@@ -193,8 +201,10 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
     return (ctx.canvas.height - xLabelMargin) - perc * (ctx.canvas.height - xLabelMargin - nonAxisMargin);
   }
 
-  function getStepSize(_maxSteps, _delta) {
-    const stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000];
+  function getStepSize(_maxSteps, _delta, _isDateIndex = false) {
+    let stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
+    if (_isDateIndex) stepOptions = [1, 5, 10, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 14400, 21600, 43200, 86400, 172800, 604800, 864000];
+
     for (let i = 0; i < stepOptions.length; i++)
     {
       let steps = _delta / stepOptions[i];
@@ -234,6 +244,15 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
 
 
   return <BaseGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} drawCallback={draw}/>
+}
+
+
+
+
+
+function numberToTwoDigitString(_number) {
+  if (_number > 9) return _number;
+  return '0' + _number;
 }
 
 

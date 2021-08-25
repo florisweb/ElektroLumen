@@ -26,5 +26,7 @@ const App = new function() {
   }
 }
 
-// App.setup();
+// setTimeout(function () {
+  App.setup();
+// }, 100);
 export default App;
