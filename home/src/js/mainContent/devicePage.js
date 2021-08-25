@@ -29,14 +29,14 @@ function UIDefListToObjects(_UIDefList = []) {
 }
 
 function UIDefToObjects(_Def) {
-  console.log(_Def);
   switch (_Def.type) 
   {
     case 'Variable': 
       return <Variable name={_Def.parameters[0]} value={_Def.parameters[1]}/>;
     
-    case 'LineGraph': 
-      return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} data={_Def.parameters[2]}/>;
+    case 'LineGraph':   
+      let dataParams = _Def.parameters.splice(2, _Def.parameters.length);
+      return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} lines={dataParams}/>;
     
     default: 
       return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>

@@ -11,14 +11,20 @@ export function Variable({name, value}) {
 }
 
 
-export function LineGraph({xAxisTag, yAxisTag, yRange, data, controlObject}) {
-  let actualData = [];
-  try {
-    actualData = typeof data == 'string' ? JSON.parse(data) : data;
-  } catch (e) {};
+export function LineGraph({xAxisTag, yAxisTag, yRange, lines, controlObject}) {
+  let actualLines = [];
+  for (let line of lines)
+  {
+    let actualLineData = [];
+    try {
+      actualLineData = typeof line == 'string' ? JSON.parse(line) : line;
+    } catch (e) {};
+    actualLines.push(actualLineData);
+  }
+ 
   return (
     <div className='Component panel lineGraph'> 
-      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} yRange={yRange} data={actualData} controlObject={controlObject}/>
+      <DV.LineGraph xAxisTag={xAxisTag} yAxisTag={yAxisTag} yRange={yRange} lines={actualLines} controlObject={controlObject}/>
     </div>
   )
 }

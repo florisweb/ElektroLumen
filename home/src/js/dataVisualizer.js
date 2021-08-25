@@ -44,7 +44,7 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
   )
 }
 
-export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
+export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
   console.log('create lineGraph', ...arguments);
 
   const yLabelMargin = 20;
@@ -56,12 +56,12 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   const numberColor = '#666';
   const minLabelRoom = 20; //px
 
-  if (!yRange) yRange = calcYRange(data);
-  let xRange = calcXRange(data);
-
+  if (!yRange) yRange = calcRange(lines, 1);
+  let xRange = calcRange(lines, 0);
+  console.log('range', xRange, yRange);
 
   const dy = yRange[1] - yRange[0];
-  const dx = xRange[1];
+  const dx = xRange[1] - xRange[0]
 
 
   function draw(ctx) {
@@ -70,27 +70,31 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
 
     drawXAxis(ctx);
     drawYAxis(ctx);
-    if (!data[0]) return;
-    if (typeof data[0] != 'object') return drawLine(ctx, data);
-    for (let i = 0; i < data.length; i++)
+
+    if (!lines[0]) return;
+    if (typeof lines[0] != 'object') return drawLine(ctx, lines);
+    for (let i = 0; i < lines.length; i++)
     {
-      drawLine(ctx, data[i], Colors[i]);
+      drawLine(ctx, lines[i], Colors[i]);
     }
   }
 
 
 
   function drawLine(ctx, _data, _lineColor = '#f00') {
-    let y = dataToYLoc(_data[0], ctx);
+    if (!_data[0]) return;
+    let x = indexToXLoc(_data[0][0], ctx);
+    let y = dataToYLoc(_data[0][1], ctx);
+
     ctx.lineWidth = 1;
     ctx.strokeStyle = _lineColor;
     ctx.beginPath();
-    ctx.moveTo(yLabelMargin, y);
+    ctx.moveTo(x, y);
 
     for (let i = 1; i < _data.length; i++)
     {
-      let x = indexToXLoc(i, ctx);
-      let y = dataToYLoc(_data[i], ctx);
+      let x = indexToXLoc(_data[i][0], ctx);
+      let y = dataToYLoc(_data[i][1], ctx);
       ctx.lineTo(x, y);
     }
 
@@ -113,12 +117,12 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       
       ctx.closePath();
       ctx.stroke();
-    }
+    } else y = ctx.canvas.height - nonAxisMargin;
 
     ctx.lineWidth = .5;
     ctx.textAlign = 'center';
     ctx.textBaseline = "middle"; 
-    for (let x = 0; x < xRange[1] + stepSize; x += stepSize)
+    for (let x = Math.floor(xRange[0] / stepSize) * stepSize; x < xRange[1] + stepSize; x += stepSize)
     {
       ctx.strokeStyle = subAxisColor;
       let xLoc = indexToXLoc(x, ctx);
@@ -130,9 +134,16 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
       ctx.stroke();
 
       if (x === 0) continue;
+      let labelText = String(x).substr(0, 4);
+      if (x > 1000000000)
+      {
+        let date = new Date();
+        date.setTime(x * 1000);
+        labelText = date.getSeconds();
+      }
 
       ctx.fillStyle = numberColor;
-      ctx.fillText(String(x).substr(0, 4), xLoc, y + xLabelMargin * .5);
+      ctx.fillText(labelText, xLoc, y + xLabelMargin * .5);
       ctx.fill();
     }
   }
@@ -172,7 +183,9 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
 
   function indexToXLoc(_index, ctx) {
-    return _index / (xRange[1] - 1) * (ctx.canvas.width - yLabelMargin - nonAxisMargin) + yLabelMargin;
+    let perc = (_index - xRange[0]) / (xRange[1] - xRange[0]);
+    if (perc < 0 || perc > 1.1) return false;
+    return perc * (ctx.canvas.width - yLabelMargin - nonAxisMargin) + yLabelMargin;
   }
   function dataToYLoc(_value, ctx) {
     let perc = (_value - yRange[0]) / (yRange[1] - yRange[0]);
@@ -181,7 +194,7 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
   }
 
   function getStepSize(_maxSteps, _delta) {
-    const stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
+    const stepOptions = [.01, .02, .05, .1, .2, .5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000];
     for (let i = 0; i < stepOptions.length; i++)
     {
       let steps = _delta / stepOptions[i];
@@ -192,39 +205,30 @@ export function LineGraph({xAxisTag, yAxisTag, data, yRange, controlObject}) {
     return stepOptions[stepOptions.length - 1];
   }
 
-  function calcXRange(_data) {
-    if (typeof data[0] != 'object') return [0, _data.length];
-    let maxRange = 0;
+
+  function calcRange(_data, _rangeIndex) {
+    let min = Infinity;
+    let max = -Infinity;
+
+    if (typeof _data[0] != 'object') return calcRangePerDataSet(_data, _rangeIndex);
     for (let lineData of _data)
     {
-     if (lineData.length > maxRange) maxRange = lineData.length;
+      let range = calcRangePerDataSet(lineData, _rangeIndex);
+      if (range[0] < min) min = range[0];
+      if (range[1] > max) max = range[1];
     }
-    return [0, maxRange];
+    return [min, max];
   }
-
-  function calcYRange(_data) {
-    let minY = Infinity;
-    let maxY = -Infinity;
-
-    if (typeof data[0] != 'object') return calcYRangePerDataSet(_data);
-    for (let lineData of _data)
-    {
-      let range = calcYRangePerDataSet(lineData);
-      if (range[0] < minY) minY = range[0];
-      if (range[1] > maxY) maxY = range[1];
+    function calcRangePerDataSet(_data, _rangeIndex) {
+      let min = Infinity;
+      let max = -Infinity;
+      for (let i = 0; i < _data.length; i++)
+      {
+        if (min > _data[i][_rangeIndex]) min = _data[i][_rangeIndex];
+        if (max < _data[i][_rangeIndex]) max = _data[i][_rangeIndex];
+      }
+      return [min, max];
     }
-    return [minY, maxY];
-  }
-  function calcYRangePerDataSet(_data) {
-    let minY = Infinity;
-    let maxY = -Infinity;
-    for (let i = 0; i < _data.length; i++)
-    {
-      if (minY > _data[i]) minY = _data[i];
-      if (maxY < _data[i]) maxY = _data[i];
-    }
-    return [minY, maxY];
-  }
 
 
 
