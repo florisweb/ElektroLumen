@@ -1,14 +1,28 @@
-
+:root {
+  --componentWidth: 25%;
+  --componentHeight: 100px;
+}
 
 .Component.panel {
   position: relative;
-  display: flex;
+  /* flex: 1; */
+  float: left;
 
   padding: 20px;
-
+  width: calc(var(--componentWidth) - 10px * 2);
+  height: calc(var(--componentHeight) - 10px * 2);
+  margin: 10px;
+  
   border-radius: 5px;
-  background: rgba(0, 0, 0, .05);
-  box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .01);
+
+  box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .02);
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  box-sizing: border-box;
+}
+.Component.panel.whiteSpace {
+  opacity: 0;
+  pointer-events: none;
 }
 
 
@@ -21,11 +35,9 @@
 
 
 .Component.panel.lineGraph {
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 4;
+  width: calc(2 * var(--componentWidth) - 10px * 2);
+  height: calc(2 * var(--componentHeight) - 10px * 2);
   padding: 0px;
+
   background-color: #fff;
-  box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, .06);
 }

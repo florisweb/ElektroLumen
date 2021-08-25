@@ -38,6 +38,8 @@ function UIDefToObjects(_Def) {
       let dataParams = _Def.parameters.splice(2, _Def.parameters.length);
       return <LineGraph xAxisTag={_Def.parameters[0]} yAxisTag={_Def.parameters[1]} lines={dataParams}/>;
     
+    case 'WhiteSpace': 
+      return <div className='Component panel whiteSpace'></div>;
     default: 
       return <strong>UIComponent of type `{_Def.type}` is not supported.</strong>
   }

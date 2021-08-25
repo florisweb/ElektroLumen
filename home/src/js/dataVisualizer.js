@@ -150,8 +150,7 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
     date.setTime(_index * 1000);
     if (_stepSize < 60) return date.getMinutes() + ":" + numberToTwoDigitString(date.getSeconds());
     if (_stepSize < 60 * 60) return numberToTwoDigitString(date.getHours()) + ":" + numberToTwoDigitString(date.getMinutes());
-    if (_stepSize < 60 * 60 * 24) return date.getHours();
-    // if (_stepSize < 60 * 60 * 24 * 7) 
+    if (_stepSize < 60 * 60 * 24) return date.getHours() + "h";
     return numberToTwoDigitString(date.getDate()) + "-" + numberToTwoDigitString(date.getMonth() + 1);
   }
  

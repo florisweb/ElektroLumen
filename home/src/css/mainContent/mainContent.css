@@ -41,9 +41,6 @@
 
 
 #mainContent .content {
+    position: relative;
     grid-area: content;
-    display: grid;
-    grid-template-columns: repeat(4, calc(25% - 25px));
-    grid-template-rows: repeat(5, calc(70px));
-    grid-gap: 30px;
 }
