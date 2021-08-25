@@ -31,7 +31,8 @@
 
   function resolveParameter($_parameter) {
     $newString = replacePlaceHolderWithIndex('[STATE', $_parameter);
-    $newString = replacePlaceHolderWithIndex('[DATA_COLUMN', $newString);
+    $newString = replacePlaceHolderWithIndex('[DATA_COLUMN_DATEPAIRED', $newString);
+    $newString = replacePlaceHolderWithIndex('[DATA_COLUMN_INDEXPAIRED', $newString);
     return $newString;
   }
 
@@ -56,13 +57,13 @@
   }
 
   function getValueByTypeAndIndex($_type, $_index) {
-      if ($_type == '[DATA_COLUMN') 
-      {
-        return json_encode($GLOBALS['device']->getDataByColumn($_index));
-      }
-      // Get state
+    if ($_type == "[STATE")
+    {
       if (!isset($GLOBALS['device']->getStateValues()[$_index])) return "[E_InvalidStateIndex]";
       return $GLOBALS['device']->getStateValues()[$_index];
+    }
+  
+    return json_encode($GLOBALS['device']->getDataByColumn($_index, $_type == '[DATA_COLUMN_DATEPAIRED'));    
   }
 
 

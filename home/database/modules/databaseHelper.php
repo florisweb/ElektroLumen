@@ -142,16 +142,10 @@
     }
 
     public function getLatestNRows($_n) {
-      $rows = $this->DB->execute("SELECT deviceData FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate ASC LIMIT ?", [
+      return $this->DB->execute("SELECT deviceData, createDate FROM $this->DBDataTableName WHERE deviceId=? ORDER BY createDate ASC LIMIT ?", [
         $this->id,
         $_n,
       ]);
-      $data = [];
-      for ($i = 0; $i < sizeof($rows); $i++)
-      {
-        array_push($data, json_decode($rows[$i]["deviceData"], true));
-      }
-      return $data;
     }
 
     public function getAllData() {

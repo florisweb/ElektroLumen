@@ -5,8 +5,9 @@
 - Device State:    /
 
 ### Linked Variables
-NI - '[STATE' + index + ']': Returns the value on that index of the devices state
-NI - '[DATA_COLUMN' + index + ']': Returns an array of all the index-th items of all the rows
+- '[STATE' + index + ']': Returns the value on that index of the devices state
+- '[DATA_COLUMN_DATEPAIRED' + propIndex + ']': Returns an array of all the index-th items of all the rows (paired with their date)
+- '[DATA_COLUMN_INDEXPAIRED' + propIndex + ']': Returns an array of all the index-th items of all the rows (paired with their index)
 NI - '[ROWS_LATEST]': Returns the latest row
 
 

@@ -95,13 +95,26 @@
       return $this->DBHelper->stateValues;
     }
 
-    public function getDataByColumn($_index) {
+    public function getDataByColumn($_index, $_dateIndexed = false) {
       $allData = $this->DBHelper->getLatestNRows(100);
       $columnData = [];
       for ($i = 0; $i < sizeof($allData); $i++)
       {
-        if (!isset($allData[$i][$_index])) return "E_InvalidColumnIndex";
-        array_push($columnData, $allData[$i][$_index]);
+        $data = json_decode($allData[$i]["deviceData"], true);
+        if (!isset($data[$_index])) return "E_InvalidColumnIndex";
+
+        $curIndex = $i;
+        if ($_dateIndexed)
+        {
+          $curIndex = $allData[$i]["createDate"];
+        }
+
+        $obj = array(
+          $curIndex,
+          $data[$_index]
+        );
+
+        array_push($columnData, $obj);
       }
       return $columnData;
     }
