@@ -45,8 +45,6 @@ function BaseGraph({xAxisTag, yAxisTag, drawCallback = function() {}}) {
 }
 
 export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
-  console.log('create lineGraph', ...arguments);
-
   const yLabelMargin = 20;
   const xLabelMargin = 15;
   const nonAxisMargin = 15;
@@ -61,8 +59,6 @@ export function LineGraph({xAxisTag, yAxisTag, lines, yRange, controlObject}) {
   let xRange = calcRange(lines, 0);
   
   const xAxisTagIsDate = xRange[0] > 1000000000;
-  console.log('range', xRange, yRange);
-
   const dy = yRange[1] - yRange[0];
   const dx = xRange[1] - xRange[0]
 

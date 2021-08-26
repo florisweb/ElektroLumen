@@ -58,7 +58,7 @@ function DeviceElement({data}) {
   if (data.status == 1) statusClass = 'online';
   if (data.status == 2) statusClass = 'error';
 
-  return <div className='header device'>
+  return <div className='header device' onClick={() => {MainContent.devicePage.open(data)}}>
     <img className='icon' src={icon}/>
     <div className='text title'>{data.name}</div>
     <div className={'text status ' + statusClass}>●</div>

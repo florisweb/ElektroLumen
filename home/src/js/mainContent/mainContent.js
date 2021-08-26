@@ -13,10 +13,12 @@ const MainContent = new function() {
   this.devicePage = new function() {
     this.open = async function(_device) {
       this.setOpenState(true);
+      curDevice.id = _device.id;
       setCurDevice(_device);
       await this.update();
     }
     this.update = async function() {
+      console.log('update', curDevice);
       let response = await Server.getFilledInDevice(curDevice.id);
       if (response.error) return console.error(response);
       curDevice = response.result;
@@ -39,7 +41,6 @@ const MainContent = new function() {
 
 function MainContentElement() {
   [curDevice, setCurDevice] = React.useState({name: '...'});
-  console.log(curDevice);
   return (
     <div id='mainContent'>
       <DevicePage device={curDevice}/>

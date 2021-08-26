@@ -47,13 +47,9 @@ function PairMenuElement() {
 }
 
 function DeviceElement({data}) {
-  console.log(data, arguments);
-
   return <div className='deviceOption' onClick={() => {
-    console.log('bind', data.id);
     setBindState(true);
     Server.bindDevice(data.id).then(async function(_response) {
-      console.log('pair response', _response);
       setBindState(false);
 
       if (!_response.result) return;
