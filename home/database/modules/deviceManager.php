@@ -96,7 +96,7 @@
     }
 
     public function getDataByColumn($_index, $_dateIndexed = false) {
-      $allData = $this->DBHelper->getLatestNRows(100);
+      $allData = $this->DBHelper->getLatestNRows(200);
       $columnData = [];
       for ($i = 0; $i < sizeof($allData); $i++)
       {
