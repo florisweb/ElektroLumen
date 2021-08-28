@@ -3,23 +3,27 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
+const char* ssid = "";
+const char* password = "";
 
 const String deviceName = "ElektroLumen";
-const String deviceToken = "fd55f6784dc43fb5f69859b3e6ea8f7330c8b3ecaf25dffa19ba98f91721e06578b401556c0c2735"; // Leave empty if not yet generated
-
-Device device;
+const String deviceToken = ""; // Leave empty if not yet generated
 
 
-const int DHT11SensorPin = 14;
+
+const int DHT11SensorPin = 33;
 const int groundMoisturePin1 = 34;
 const int groundMoisturePin2 = 35;
 const int photoResistorPin = 32;
 
-const int motorEnablePin = 33;
+const int motorEnablePin = 14;
+
+
+const int loopsPerUpdate = 15;
 
 
 
-
+Device device;
 DHT_Unified dht(DHT11SensorPin, DHT11);
 
 void setup() {
@@ -65,48 +69,106 @@ void setup() {
 }
 
 
-String dataString = "";
-float moistureValue1 = 0;
-float moistureValue2 = 0;
-float lightValue = 0;
-void loop() {
-//  digitalWrite(motorEnablePin, HIGH);
-//  delay(1000);
-//  digitalWrite(motorEnablePin, LOW);
 
-  bool Status = device.getStatus();
-  Serial.print("Status: ");
-  Serial.println(Status);
 
-  if (Status) // The device is bound to an account
-  {
-    dataString = "";
-    sensors_event_t event;
-    dht.temperature().getEvent(&event);
-    if (isnan(event.temperature)) {
-      Serial.println(F("Error reading temperature!"));
-      dataString += "-1,";
-    }
-    else {
-      dataString += (String)event.temperature + ","; //°C
-    }
-    // Get humidity event and print its value.
-    dht.humidity().getEvent(&event);
-    if (isnan(event.relative_humidity)) {
-      Serial.println(F("Error reading humidity!"));
-      dataString += "-1,";
-    }
-    else {
-      dataString += (String)event.relative_humidity + ","; //%
-    }
 
-    moistureValue1  = analogRead(groundMoisturePin1) / 40.95;
-    moistureValue2  = analogRead(groundMoisturePin2) / 40.95;
-    lightValue      = analogRead(photoResistorPin) / 40.95;
-    dataString      += (String)moistureValue1 + "," + (String)moistureValue2 + "," + (String)lightValue;
 
-    Serial.println(device.writeData("[" + dataString + "]"));
-    delay(60 * 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+float temperatureValueSum = 0;
+float humidityValueSum = 0;
+int moistureValue1Sum = 0;
+int moistureValue2Sum = 0;
+int lightValueSum = 0;
+
+void updateSensorValues() {
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  if (isnan(event.temperature)) {
+    temperatureValueSum += -1;
   }
-  delay(5000);
+  else {
+    temperatureValueSum += event.temperature;
+  }
+
+  dht.humidity().getEvent(&event);
+  if (isnan(event.relative_humidity)) {
+    humidityValueSum += -1;
+  }
+  else {
+    humidityValueSum += event.relative_humidity;
+  }
+
+  moistureValue1Sum += analogRead(groundMoisturePin1);
+  moistureValue2Sum += analogRead(groundMoisturePin2);
+  lightValueSum     += analogRead(photoResistorPin);
+}
+
+String dataString = "";
+
+float temperatureValue  = 0;
+float humidityValue     = 0;
+float moistureValue1    = 0;
+float moistureValue2    = 0;
+float lightValue        = 0;
+
+void uploadSensorValues() {
+  temperatureValue  = temperatureValueSum / loopsPerUpdate;
+  humidityValue     = humidityValueSum / loopsPerUpdate;
+  moistureValue1    = moistureValue1Sum / loopsPerUpdate / 40.95;
+  moistureValue2    = moistureValue2Sum / loopsPerUpdate / 40.95;
+  lightValue        = lightValueSum / loopsPerUpdate / 40.95;
+
+  dataString = (String)temperatureValue + "," + (String)humidityValue + "," + (String)moistureValue1 + "," + (String)moistureValue2 + "," + (String)lightValue;
+
+  temperatureValueSum = 0;
+  humidityValueSum    = 0;
+  moistureValue1Sum   = 0;
+  moistureValue2Sum   = 0;
+  lightValueSum       = 0;
+
+
+  Serial.println(device.writeData("[" + dataString + "]"));
+}
+
+
+
+
+int loopIndex = 0;
+bool Status = false;
+void loop() {
+  //  digitalWrite(motorEnablePin, HIGH);
+  //  delay(1000);
+  //  digitalWrite(motorEnablePin, LOW);
+
+  loopIndex++;
+  updateSensorValues();
+
+  if (loopIndex > loopsPerUpdate)
+  {
+    loopIndex = 0;
+    Status = device.getStatus();
+    Serial.print("Status: ");
+    Serial.println(Status);
+
+    if (Status) // The device is bound to an account
+    {
+      uploadSensorValues();
+    }
+  }
+
+  delay(60 * 1000);
 }
