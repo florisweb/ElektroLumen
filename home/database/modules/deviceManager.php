@@ -62,12 +62,9 @@
     }
 
     public function curUserIsOwner() {
-      return $this->getOwnerId() == $this->DBHelper->ownerId;
+      return $GLOBALS['DBHelper']->getUserId() == $this->DBHelper->ownerId;
     }
 
-    public function getOwnerId() {
-      return $this->DBHelper->ownerId;
-    }
     public function isOnSameNetwork() {
       return $this->DBHelper->ip === getIP();
     }
