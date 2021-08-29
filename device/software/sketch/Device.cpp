@@ -3,7 +3,7 @@
 
 
 WifiController wifiController;
-String requestPath = "https://home.florisweb.ga/database/API/";
+String requestPath = "https://home.florisweb.dev/database/API/";
 
 void Device::configureWifi(const char* _ssid, const char* _password)
 {

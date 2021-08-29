@@ -10,13 +10,12 @@ const String deviceName = "ElektroLumen";
 const String deviceToken = ""; // Leave empty if not yet generated
 
 
-
-const int DHT11SensorPin = 33;
-const int groundMoisturePin1 = 34;
 const int groundMoisturePin2 = 35;
+const int groundMoisturePin1 = 34;
+const int DHT11SensorPin = 33;
 const int photoResistorPin = 32;
 
-const int motorEnablePin = 14;
+const int motorEnablePin = 26;
 
 
 const int loopsPerUpdate = 15;
@@ -32,7 +31,7 @@ void setup() {
   pinMode(groundMoisturePin2, INPUT);
   pinMode(photoResistorPin, INPUT);
   pinMode(motorEnablePin, OUTPUT);
-  digitalWrite(motorEnablePin, LOW);
+  digitalWrite(motorEnablePin, HIGH);
 
 
   device.configureWifi(ssid, password);
@@ -46,6 +45,10 @@ void setup() {
   }
 
   // Sensors
+  Serial.println("Sensorset 2");
+  Serial.println(analogRead(groundMoisturePin1));
+  Serial.println(analogRead(groundMoisturePin2));
+  Serial.println(analogRead(photoResistorPin));
 
 
   dht.begin();
@@ -66,6 +69,10 @@ void setup() {
   Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("%"));
   Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
   Serial.println(F("------------------------------------"));
+
+  digitalWrite(motorEnablePin, LOW);
+  delay(1000);
+  digitalWrite(motorEnablePin, HIGH);
 }
 
 
@@ -157,7 +164,7 @@ void loop() {
   loopIndex++;
   updateSensorValues();
 
-  if (loopIndex > loopsPerUpdate)
+  if (loopIndex >= loopsPerUpdate)
   {
     loopIndex = 0;
     Status = device.getStatus();
