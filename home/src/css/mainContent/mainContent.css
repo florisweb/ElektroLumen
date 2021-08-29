@@ -4,6 +4,7 @@
     grid-area: mainContent;
 
     width: calc(100% - 20px * 2);
+    height: 100vh;
     padding: 20px;
 
     grid-template-areas: 

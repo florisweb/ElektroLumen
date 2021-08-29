@@ -74,7 +74,7 @@
 
     public function getConnectionStatus() {
       $dt = time() - $this->DBHelper->lastUpdateTime;
-      return $dt < 5 * 60; // s = deviceConnectionTimeout
+      return $dt < 30 * 60; // s = deviceConnectionTimeout
     }
 
     public function getMetaData() {
@@ -96,7 +96,7 @@
     }
 
     public function getDataByColumn($_index, $_dateIndexed = false) {
-      $allData = $this->DBHelper->getLatestNRows(200);
+      $allData = $this->DBHelper->getLatestNRows(5000);
       $columnData = [];
       for ($i = 0; $i < sizeof($allData); $i++)
       {

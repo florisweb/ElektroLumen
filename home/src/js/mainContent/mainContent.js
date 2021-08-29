@@ -1,5 +1,4 @@
 import '../../css/mainContent/mainContent.css';
-import PairMenu from './pairMenu';
 import DevicePage from './devicePage';
 import Server from '../server';
 import React from 'react';
@@ -8,8 +7,6 @@ let curDevice;
 let setCurDevice;
 
 const MainContent = new function() {
-  this.pairMenu = PairMenu;
-
   this.devicePage = new function() {
     this.open = async function(_device) {
       this.setOpenState(true);
@@ -44,8 +41,6 @@ function MainContentElement() {
   return (
     <div id='mainContent'>
       <DevicePage device={curDevice}/>
-
-      <PairMenu.render/>
     </div>
   );
 }

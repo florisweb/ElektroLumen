@@ -6,6 +6,7 @@ import icon from '../images/icons/plantIcon.png';
 import addDeviceIcon from '../images/sidebar.jpg';
 
 import MainContent from './mainContent/mainContent';
+import PairMenu from './pairMenu';
 
 
 const SideBar = new function() {
@@ -68,7 +69,7 @@ function DeviceElement({data}) {
 
 
 function AddDeviceButton() {
-  return <div className='header addDeviceButton' onClick={() => {MainContent.pairMenu.open()}}>
+  return <div className='header addDeviceButton' onClick={() => {PairMenu.open()}}>
     <img className='icon' src={addDeviceIcon}/>
     <div className='text title'>{'Add Device'}</div>
   </div>
