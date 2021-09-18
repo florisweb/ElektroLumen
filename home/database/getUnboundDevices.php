@@ -1,6 +1,7 @@
 <?php
   require_once __DIR__ . '/modules/deviceManager.php';
 
+  $GLOBALS['DBHelper']->removeInActiveUnboundDevices();
   $devices = $DeviceManager->getUnBoundDevices();
 
   $output = [];

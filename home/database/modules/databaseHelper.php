@@ -71,7 +71,22 @@
       return  sha1(uniqid(mt_rand(), true)) . 
           sha1(uniqid(mt_rand(), true));
     }
+
+
+    public function removeInActiveUnboundDevices() {
+      return $this->DB->execute(
+        "DELETE FROM $this->DeviceListTableName WHERE ?-registerTime>? AND ownerId IS NULL", 
+        array(
+          time(),
+          60 * 60 // timeout time
+        )
+      );
+    }
   }
+
+
+
+
 
 
   class _databaseHelper_DBDeviceInstance {
