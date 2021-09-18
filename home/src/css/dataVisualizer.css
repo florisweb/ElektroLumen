@@ -4,6 +4,7 @@
   position: relative;
   display: grid;
   width: 100%;
+  height: inherit;
   grid-template-areas:
       'yAxis canvas'
       'empty xAxis';

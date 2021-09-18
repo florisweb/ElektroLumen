@@ -6,7 +6,7 @@
 
   /* background: linear-gradient(to bottom right, rgba(0, 255, 0, .3), rgba(0, 200, 255, .4)); */
   background: url('../images/sidebar.jpg');
-  background-size: auto 100%;
+  background-size: 100% 100%;
   box-shadow: 5px 5px 10px 10px rgba(180, 100, 40, .1);
 }
 
