@@ -120,6 +120,7 @@
       $this->registerTime   = $response[0]['registerTime'];
       $this->lastUpdateTime = $response[0]['lastUpdateTime'];
       $this->UIDefinition   = json_decode($response[0]['UIDefinition'], true);
+      if (is_null($this->UIDefinition)) $this->UIDefinition = [];
       $this->stateValues    = json_decode($response[0]['stateValues'], true);
       $this->ip             = $response[0]['ip'];
     }
