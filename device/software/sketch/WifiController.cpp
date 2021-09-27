@@ -9,7 +9,8 @@ void WifiController::configure(const char* _ssid, const char* _password)
   delay(10);
   Serial.println('\n');
 
-  WiFi.begin(_ssid, _password);
+  Serial.print("WiFi.begin:");
+  Serial.println(WiFi.begin(_ssid, _password));
   Serial.print("Connecting to ");
   Serial.print(_ssid);
 
