@@ -5,7 +5,8 @@
 class Device
 {
   public:
-    void configureWifi(const char* _ssid, const char* _password);
+    void configureWifi(char* _ssid, char* _password);
+    void handleDebugCommand(char rxChar);
     bool registerDevice(String _name);
 
     bool getStatus();

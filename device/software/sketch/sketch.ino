@@ -3,8 +3,8 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
-const char* ssid = "";
-const char* password = "";
+char* ssid = "";
+char* password = "";
 
 const String deviceName = "ElektroLumen";
 const String deviceToken = ""; // Leave empty if not yet generated
@@ -27,6 +27,7 @@ DHT_Unified dht(DHT11SensorPin, DHT11);
 
 void setup() {
   Serial.begin(115200);
+  Serial.flush();
   pinMode(groundMoisturePin1, INPUT);
   pinMode(groundMoisturePin2, INPUT);
   pinMode(photoResistorPin, INPUT);
@@ -43,6 +44,7 @@ void setup() {
   } else {
     Serial.println("Error while registering device.");
   }
+  Serial.print('\n');
 
   // Sensors
   Serial.println("Sensorset 2");
@@ -154,28 +156,40 @@ void uploadSensorValues() {
 
 
 
-int loopIndex = 0;
+unsigned int sensorLoopIndex = 0;
+unsigned int sketchLoopIndex = 0;
 bool Status = false;
+
 void loop() {
-  //  digitalWrite(motorEnablePin, HIGH);
-  //  delay(1000);
-  //  digitalWrite(motorEnablePin, LOW);
-
-  loopIndex++;
-  updateSensorValues();
-
-  if (loopIndex >= loopsPerUpdate)
+  if (Serial.available() > 0)
   {
-    loopIndex = 0;
-    Status = device.getStatus();
-    Serial.print("Status: ");
-    Serial.println(Status);
+    device.handleDebugCommand(Serial.read());
+    Serial.flush(); // Clear receive buffer.
+  }
 
-    if (Status) // The device is bound to an account
+  sketchLoopIndex++;
+  if (sketchLoopIndex >= 60 * 20) // 60 * 200 * 50ms = 1 minute
+  {
+    sketchLoopIndex = 0;
+
+    //    digitalWrite(motorEnablePin, HIGH);
+    //    delay(1000);
+    //    digitalWrite(motorEnablePin, LOW);
+
+    updateSensorValues();
+
+    sensorLoopIndex++;
+    if (sensorLoopIndex >= loopsPerUpdate)
     {
-      uploadSensorValues();
+      sensorLoopIndex = 0;
+      Status = device.getStatus();
+      Serial.print("Status: ");
+      Serial.println(Status);
+
+      // The device is bound to an account
+      if (Status) uploadSensorValues();
     }
   }
 
-  delay(60 * 1000);
+  delay(50);
 }
